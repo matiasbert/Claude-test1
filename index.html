@@ -752,7 +752,7 @@ td.share  { font-variant-numeric: tabular-nums; }
   <div class="header-top">
     <div>
       <div class="app-title">🏠 Casa Pipi's</div>
-      <div class="app-subtitle">Gastos del hogar · v1.3</div>
+      <div class="app-subtitle">Gastos de casita · v1.3</div>
     </div>
   </div>
   <div class="header-meta">
@@ -877,7 +877,7 @@ td.share  { font-variant-numeric: tabular-nums; }
       <button class="btn" onclick="document.getElementById('importFileInput').click()">⬆ Importar historial (.json)</button>
     </div>
     <div style="margin-top:8px;font-size:12px;color:var(--text-muted)">
-      Exportá el historial en esta PC e importalo en cualquier otro dispositivo para tener todos tus datos disponibles.
+      Exportá el historial en esta PC e importálo en cualquier otro dispositivo para tener todos tus datos disponibles.
     </div>
     <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importHistory(event)">
   </div>
@@ -907,20 +907,20 @@ td.share  { font-variant-numeric: tabular-nums; }
 </main>
 
 <script>
-// ─── CONSTANTS ────────────────────────────────────────────────────────────────
+// ─── CONSTANTS ──────────────────────────────────────────────────────────────────────────────
 const STORAGE_KEY      = 'casapi_months';
 const GH_TOKEN_KEY     = 'casapi_github_token';
 const GH_LAST_SYNC_KEY = 'casapi_last_sync';
 const GH_OWNER         = 'matiasbert';
-const GH_REPO          = 'Claude-test1';
+const GH_REPO          = 'casa-pipis';
 const GH_DATA_PATH     = 'data/history.json';
 const GH_API_URL       = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_PATH}`;
 const RECURRING_TEMPLATES = [
   { name: 'Alquiler',       currency: 'ARS' },
   { name: 'Expensas',       currency: 'ARS' },
   { name: 'Telecentro',     currency: 'ARS' },
-  { name: 'Luz / EDESUR',   currency: 'ARS' },
-  { name: 'Gas / METROGAS', currency: 'ARS' },
+  { name: 'Edesur',    currency: 'ARS' },
+  { name: 'Metrogas', currency: 'ARS' },
 ];
 
 const MONTH_NAMES_ES = [
@@ -928,12 +928,12 @@ const MONTH_NAMES_ES = [
   'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
 ];
 
-// ─── STATE ────────────────────────────────────────────────────────────────────
+// ─── STATE ──────────────────────────────────────────────────────────────────────────────
 let allMonths = {};
 let currentKey = '';
 let editingItemId = null;
 
-// ─── UTILS ────────────────────────────────────────────────────────────────────
+// ─── UTILS ──────────────────────────────────────────────────────────────────────────────
 function todayKey() {
   const d = new Date();
   return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
@@ -971,7 +971,7 @@ function showNotif(msg) {
   setTimeout(() => el.classList.remove('show'), 2500);
 }
 
-// ─── STORAGE ──────────────────────────────────────────────────────────────────
+// ─── STORAGE ──────────────────────────────────────────────────────────────────────────────
 function saveAll() {
   localStorage.setItem(STORAGE_KEY, JSON.stringify(allMonths));
 }
@@ -985,7 +985,7 @@ function loadAll() {
   }
 }
 
-// ─── MONTH RECORD HELPERS ─────────────────────────────────────────────────────
+// ─── MONTH RECORD HELPERS ─────────────────────────────────────────────────────────────────
 function newItemFromTemplate(tpl) {
   return {
     id: uid(),
@@ -1023,7 +1023,7 @@ function getMonth() { return allMonths[currentKey]; }
 
 function isReadonly() { return currentKey !== todayKey(); }
 
-// ─── SPLIT CALC ───────────────────────────────────────────────────────────────
+// ─── SPLIT CALC ──────────────────────────────────────────────────────────────────────────────
 function calcShares(item, month) {
   const matiPct = item.splitOverride ? item.splitOverride.mati : month.matiSplit;
   const pinaPct = item.splitOverride ? item.splitOverride.pina : month.pinaSplit;
@@ -1051,7 +1051,7 @@ function calcTotals(month) {
   return { totalARS, matiARS, pinaARS, totalUSD, matiUSD, pinaUSD };
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────────────────
+// ─── RENDER ──────────────────────────────────────────────────────────────────────────────
 function renderAll() {
   const month = getMonth();
   if (!month) return;
@@ -1124,7 +1124,6 @@ function buildViewRow(item, month, readonly) {
 }
 
 function buildEditRow(item, month) {
-  // Always show split inputs; pre-fill with override values if exists, else global
   const matiVal = item.splitOverride ? item.splitOverride.mati : month.matiSplit;
   const pinaVal = item.splitOverride ? item.splitOverride.pina : month.pinaSplit;
 
@@ -1138,7 +1137,7 @@ function buildEditRow(item, month) {
         <option value="USD"${item.currency==='USD'?' selected':''}>USD</option>
       </select>
     </td>
-    <td><input type="number" id="eAmount" value="${item.amount||''}" placeholder="0" min="0" step="0.01"></td>
+    <td><input type="number" id="eAmount" value="${item.amount||\'\'}" placeholder="0" min="0" step="0.01"></td>
     <td colspan="3">
       <div class="split-edit-row">
         <div class="split-edit-inputs">
@@ -1239,7 +1238,7 @@ function renderPrintHeader(month) {
   }
 }
 
-// ─── ACTIONS ──────────────────────────────────────────────────────────────────
+// ─── ACTIONS ──────────────────────────────────────────────────────────────────────────────
 function startEdit(id) {
   editingItemId = id;
   renderAll();
@@ -1266,7 +1265,6 @@ function saveEdit(id) {
     return;
   }
 
-  // Store as override only if it differs from global split
   const splitOverride = (m === month.matiSplit && p === month.pinaSplit)
     ? null
     : { mati: m, pina: p };
@@ -1334,7 +1332,7 @@ function navigateMonth(delta) {
   renderAll();
 }
 
-// ─── HEADER INPUTS ────────────────────────────────────────────────────────────
+// ─── HEADER INPUTS ──────────────────────────────────────────────────────────────────────────────
 document.getElementById('matiSplitInput').addEventListener('change', function() {
   const month = getMonth();
   if (!month || isReadonly()) return;
@@ -1358,7 +1356,7 @@ document.getElementById('pinaSplitInput').addEventListener('change', function() 
 document.getElementById('prevMonthBtn').addEventListener('click', () => navigateMonth(-1));
 document.getElementById('nextMonthBtn').addEventListener('click', () => navigateMonth(1));
 
-// ─── MODAL ────────────────────────────────────────────────────────────────────
+// ─── MODAL ──────────────────────────────────────────────────────────────────────────────
 function openModal() {
   const list = document.getElementById('monthList');
   list.innerHTML = '';
@@ -1405,7 +1403,7 @@ function deleteMonth(key) {
   showNotif('Mes borrado');
 }
 
-// ─── EXPORT ───────────────────────────────────────────────────────────────────
+// ─── EXPORT ──────────────────────────────────────────────────────────────────────────────
 function buildTextSummary() {
   const month = getMonth();
   if (!month) return '';
@@ -1462,7 +1460,6 @@ function buildImageSnapshot() {
   const t = calcTotals(month);
   const snap = document.getElementById('imageSnapshot');
 
-  // Build expense rows HTML
   let rowsHtml = '';
   for (const item of month.items) {
     const amt = parseFloat(item.amount) || 0;
@@ -1536,7 +1533,7 @@ function saveImage() {
   }).catch(() => showNotif('⚠ Error al generar imagen'));
 }
 
-// ─── HISTORIAL EXPORT / IMPORT ───────────────────────────────────────────────
+// ─── HISTORIAL EXPORT / IMPORT ─────────────────────────────────────────────────────────────────────────────
 function exportHistory() {
   const keys = getSortedKeys();
   if (!keys.length) { showNotif('⚠ No hay datos para exportar'); return; }
@@ -1574,7 +1571,7 @@ function importHistory(event) {
   reader.readAsText(file);
 }
 
-// ─── GITHUB SYNC ─────────────────────────────────────────────────────────────
+// ─── GITHUB SYNC ──────────────────────────────────────────────────────────────────────────────
 
 function loadGhToken() { return localStorage.getItem(GH_TOKEN_KEY) || ''; }
 
@@ -1615,12 +1612,10 @@ function renderSyncStatus(msg, cls) {
       el.className = 'sync-status ok';
     }
   }
-  // Pre-fill token input (masked)
   const input = document.getElementById('ghTokenInput');
   if (input && token) input.value = token;
 }
 
-// Encode/decode JSON with proper unicode support for GitHub API (base64)
 function toBase64(str)   { return btoa(unescape(encodeURIComponent(str))); }
 function fromBase64(str) { return decodeURIComponent(escape(atob(str))); }
 
@@ -1630,7 +1625,7 @@ async function ghGetFile(token) {
   });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`GitHub API error ${res.status}`);
-  return await res.json(); // { content, sha, ... }
+  return await res.json();
 }
 
 async function pushToGithub() {
@@ -1700,7 +1695,6 @@ async function autoLoadFromGithub() {
     if (!file) { renderSyncStatus(); return; }
     const payload  = JSON.parse(fromBase64(file.content.replace(/\n/g, '')));
     const imported = payload.months || payload;
-    // Silent merge: add months not present locally, keep local for conflicts
     let added = 0;
     for (const k of Object.keys(imported)) {
       if (!allMonths[k]) { allMonths[k] = imported[k]; added++; }
@@ -1718,7 +1712,6 @@ async function autoLoadFromGithub() {
   }
 }
 
-// Shared merge logic used by both pull and importHistory
 function _applyImportedMonths(imported, githubWinsOnConflict) {
   const importedKeys  = Object.keys(imported);
   const newKeys       = importedKeys.filter(k => !allMonths[k]);
@@ -1735,7 +1728,7 @@ function _applyImportedMonths(imported, githubWinsOnConflict) {
     if (replace) for (const k of conflictKeys) allMonths[k] = imported[k];
   } else {
     for (const k of newKeys)      allMonths[k] = imported[k];
-    for (const k of conflictKeys) allMonths[k] = imported[k]; // GitHub wins silently on pull
+    for (const k of conflictKeys) allMonths[k] = imported[k];
   }
 
   saveAll();
@@ -1746,7 +1739,7 @@ function _applyImportedMonths(imported, githubWinsOnConflict) {
   showNotif(`✓ ${importedKeys.length} ${importedKeys.length === 1 ? 'mes importado' : 'meses importados'}`);
 }
 
-// ─── ESCAPE HELPERS ───────────────────────────────────────────────────────────
+// ─── ESCAPE HELPERS ──────────────────────────────────────────────────────────────────────────────
 function escHtml(str) {
   return String(str)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;')
@@ -1757,7 +1750,7 @@ function escAttr(str) {
   return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;');
 }
 
-// ─── INIT ─────────────────────────────────────────────────────────────────────
+// ─── INIT ──────────────────────────────────────────────────────────────────────────────
 (async function init() {
   loadAll();
   currentKey = ensureCurrentMonth();
