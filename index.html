@@ -694,7 +694,7 @@ td.share  { font-variant-numeric: tabular-nums; }
   <div class="header-top">
     <div>
       <div class="app-title">🏠 Casa Pipi's</div>
-      <div class="app-subtitle">Gastos del hogar · v1.1</div>
+      <div class="app-subtitle">Gastos del hogar · v1.2</div>
     </div>
   </div>
   <div class="header-meta">
@@ -807,12 +807,21 @@ td.share  { font-variant-numeric: tabular-nums; }
 
   <!-- EXPORT -->
   <div class="export-section">
-    <div class="export-title">Exportar</div>
+    <div class="export-title">Exportar mes</div>
     <div class="export-btns">
       <button class="btn" onclick="copyText()">📋 Copiar texto</button>
       <button class="btn" onclick="downloadPDF()">🖨️ Descargar PDF</button>
       <button class="btn" onclick="saveImage()">📷 Guardar imagen</button>
     </div>
+    <div class="export-title" style="margin-top:16px">Historial completo</div>
+    <div class="export-btns">
+      <button class="btn btn-primary" onclick="exportHistory()">⬇ Exportar historial (.json)</button>
+      <button class="btn" onclick="document.getElementById('importFileInput').click()">⬆ Importar historial (.json)</button>
+    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--text-muted)">
+      Exportá el historial en esta PC e importalo en cualquier otro dispositivo para tener todos tus datos disponibles.
+    </div>
+    <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importHistory(event)">
   </div>
 
 </main>
@@ -1439,6 +1448,69 @@ function saveImage() {
     link.click();
     showNotif('✓ Imagen descargada');
   }).catch(() => showNotif('⚠ Error al generar imagen'));
+}
+
+// ─── HISTORIAL EXPORT / IMPORT ───────────────────────────────────────────────
+function exportHistory() {
+  const keys = getSortedKeys();
+  if (!keys.length) { showNotif('⚠ No hay datos para exportar'); return; }
+
+  const payload = { version: 1, exportedAt: new Date().toISOString(), months: allMonths };
+  const json = JSON.stringify(payload, null, 2);
+  const blob = new Blob([json], { type: 'application/json' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  const date = new Date().toISOString().slice(0, 10);
+  link.download = `casapipis-historial-${date}.json`;
+  link.href = url;
+  link.click();
+  URL.revokeObjectURL(url);
+  showNotif(`✓ Historial exportado (${keys.length} ${keys.length === 1 ? 'mes' : 'meses'})`);
+}
+
+function importHistory(event) {
+  const file = event.target.files[0];
+  if (!file) return;
+  event.target.value = '';
+
+  const reader = new FileReader();
+  reader.onload = function(e) {
+    let payload;
+    try {
+      payload = JSON.parse(e.target.result);
+    } catch {
+      showNotif('⚠ El archivo no es válido'); return;
+    }
+
+    const imported = payload.months || payload;
+    const importedKeys = Object.keys(imported);
+    if (!importedKeys.length) { showNotif('⚠ El archivo no contiene datos'); return; }
+
+    const localKeys = getSortedKeys();
+    const newKeys = importedKeys.filter(k => !allMonths[k]);
+    const conflictKeys = importedKeys.filter(k => allMonths[k]);
+
+    let msg = `Se encontraron ${importedKeys.length} ${importedKeys.length === 1 ? 'mes' : 'meses'}.\n`;
+    if (newKeys.length)      msg += `• ${newKeys.length} nuevos (se agregarán)\n`;
+    if (conflictKeys.length) msg += `• ${conflictKeys.length} ya existentes:\n  ¿Qué hacer con ellos?\n\n  OK = Reemplazar con los del archivo\n  Cancelar = Conservar los locales`;
+
+    if (conflictKeys.length) {
+      const replace = confirm(msg);
+      for (const k of newKeys) allMonths[k] = imported[k];
+      if (replace) for (const k of conflictKeys) allMonths[k] = imported[k];
+    } else {
+      if (!confirm(msg + '\n¿Importar?')) return;
+      for (const k of newKeys) allMonths[k] = imported[k];
+    }
+
+    saveAll();
+    const keys = getSortedKeys();
+    currentKey = keys[keys.length - 1];
+    editingItemId = null;
+    renderAll();
+    showNotif(`✓ Historial importado (${importedKeys.length} ${importedKeys.length === 1 ? 'mes' : 'meses'})`);
+  };
+  reader.readAsText(file);
 }
 
 // ─── ESCAPE HELPERS ───────────────────────────────────────────────────────────
