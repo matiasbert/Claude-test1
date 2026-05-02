@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Casa Pi — Gastos del hogar</title>
+<title>Casa Pipi's — Gastos del hogar</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -251,11 +251,6 @@ td {
 
 tbody tr:last-child td { border-bottom: none; }
 
-td.currency-badge {
-  font-size: 12px;
-  font-weight: 600;
-}
-
 .badge-ars {
   display: inline-block;
   background: #dbeafe;
@@ -322,29 +317,20 @@ td.share  { font-variant-numeric: tabular-nums; }
   outline-offset: -1px;
 }
 
-.split-override-row {
+.split-edit-row {
   display: flex;
   align-items: center;
   gap: 6px;
   flex-wrap: wrap;
 }
 
-.split-override-row label {
-  font-size: 12px;
-  color: var(--text-muted);
-  cursor: pointer;
+.split-edit-inputs {
   display: flex;
   align-items: center;
   gap: 4px;
 }
 
-.split-override-inputs {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.split-override-inputs input {
+.split-edit-inputs input {
   width: 52px !important;
 }
 
@@ -415,7 +401,6 @@ td.share  { font-variant-numeric: tabular-nums; }
 }
 
 .totals-row:last-child { margin-bottom: 0; }
-
 .totals-row .label { color: var(--text-muted); }
 
 .totals-row .value {
@@ -563,17 +548,115 @@ td.share  { font-variant-numeric: tabular-nums; }
 
 .notif.show { opacity: 1; }
 
+/* IMAGE SNAPSHOT (off-screen, captured by html2canvas) */
+#imageSnapshot {
+  position: fixed;
+  left: -9999px;
+  top: 0;
+  width: 680px;
+  background: #f8f6f2;
+  padding: 24px;
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font-size: 14px;
+  color: #2c3440;
+}
+
+.snap-header {
+  margin-bottom: 16px;
+  padding-bottom: 12px;
+  border-bottom: 2px solid #0d9488;
+}
+
+.snap-title {
+  font-size: 20px;
+  font-weight: 800;
+  color: #0d9488;
+}
+
+.snap-sub {
+  font-size: 13px;
+  color: #6b7280;
+  margin-top: 2px;
+}
+
+.snap-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 16px;
+  font-size: 13px;
+}
+
+.snap-table th {
+  background: #e2ddd6;
+  padding: 7px 10px;
+  text-align: left;
+  font-size: 11px;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  color: #6b7280;
+}
+
+.snap-table td {
+  padding: 7px 10px;
+  border-bottom: 1px solid #e2ddd6;
+  vertical-align: middle;
+}
+
+.snap-table tr:nth-child(even) td { background: #faf9f7; }
+
+.snap-totals {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 14px;
+}
+
+.snap-block {
+  flex: 1;
+  background: #ffffff;
+  border: 1px solid #e2ddd6;
+  border-radius: 8px;
+  padding: 12px;
+}
+
+.snap-block-title {
+  font-size: 11px;
+  font-weight: 700;
+  color: #6b7280;
+  text-transform: uppercase;
+  letter-spacing: 0.4px;
+  margin-bottom: 8px;
+}
+
+.snap-row {
+  display: flex;
+  justify-content: space-between;
+  font-size: 13px;
+  margin-bottom: 4px;
+}
+
+.snap-row .lbl { color: #6b7280; }
+.snap-row .val { font-weight: 700; font-variant-numeric: tabular-nums; }
+.snap-row .val.hi { color: #0d9488; font-size: 15px; }
+
+.snap-pina {
+  background: linear-gradient(135deg, #ccfbf1, #f0fdfa);
+  border: 2px solid #0d9488;
+  border-radius: 8px;
+  padding: 14px;
+  text-align: center;
+}
+
+.snap-pina-lbl { font-size: 12px; color: #6b7280; margin-bottom: 4px; font-weight: 500; }
+.snap-pina-val { font-size: 22px; font-weight: 800; color: #0f766e; font-variant-numeric: tabular-nums; }
+
 /* PRINT */
 @media print {
   .app-header, .month-nav, .table-wrap, .export-section, .btn,
-  .add-row-btn-wrap, .actions-cell, .modal-overlay, .notif { display: none !important; }
+  .add-row-btn-wrap, .actions-cell, .modal-overlay, .notif, #imageSnapshot { display: none !important; }
   body { background: #fff; font-size: 13px; }
   .main { max-width: 100%; padding: 0; }
-  .totals-card {
-    box-shadow: none;
-    border: 1px solid #ccc;
-    break-inside: avoid;
-  }
+  .totals-card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
   .print-header { display: block !important; margin-bottom: 16px; }
   .print-expense-table { display: table !important; width: 100%; border-collapse: collapse; }
   .print-expense-table th, .print-expense-table td {
@@ -603,19 +686,18 @@ td.share  { font-variant-numeric: tabular-nums; }
   </div>
 </div>
 
+<!-- IMAGE SNAPSHOT (off-screen, rendered before html2canvas capture) -->
+<div id="imageSnapshot"></div>
+
 <!-- APP HEADER -->
 <header class="app-header">
   <div class="header-top">
     <div>
-      <div class="app-title">🏠 Casa Pi</div>
-      <div class="app-subtitle">Gastos del hogar</div>
+      <div class="app-title">🏠 Casa Pipi's</div>
+      <div class="app-subtitle">Gastos del hogar · v1.1</div>
     </div>
   </div>
   <div class="header-meta">
-    <div class="meta-field">
-      <label for="tcInput">TC MEP (ARS/USD):</label>
-      <input type="number" id="tcInput" class="meta-input" placeholder="1200" min="1" step="0.01">
-    </div>
     <div class="meta-field">
       <label>Split global:</label>
       <div class="split-inputs">
@@ -638,25 +720,25 @@ td.share  { font-variant-numeric: tabular-nums; }
     <span class="readonly-badge" id="readonlyBadge" style="display:none">Solo lectura</span>
   </div>
   <div style="display:flex;gap:8px;">
-    <button class="btn btn-sm" id="historyBtn" onclick="openModal()">📋 Historial</button>
-    <button class="btn btn-primary btn-sm" id="newMonthBtn" onclick="createNewMonth()">+ Nuevo mes</button>
+    <button class="btn btn-sm" onclick="openModal()">📋 Historial</button>
+    <button class="btn btn-primary btn-sm" onclick="createNewMonth()">+ Nuevo mes</button>
   </div>
   <button class="btn btn-icon" id="nextMonthBtn" title="Mes siguiente">›</button>
 </div>
 
-<!-- PRINT HEADER (visible only when printing) -->
+<!-- PRINT HEADER (only shown when printing) -->
 <div class="print-header" id="printHeader"></div>
 
 <!-- MAIN -->
-<main class="main" id="mainContent">
+<main class="main">
 
   <!-- EXPENSE TABLE -->
-  <div class="table-wrap" id="tableWrap">
+  <div class="table-wrap">
     <div class="table-header">
       <span class="table-title">Gastos</span>
     </div>
     <div class="table-scroll">
-      <table id="expenseTable">
+      <table>
         <thead>
           <tr>
             <th>Concepto</th>
@@ -680,7 +762,7 @@ td.share  { font-variant-numeric: tabular-nums; }
   <div class="totals-card" id="totalsCard">
     <div class="totals-title">Resumen del mes</div>
     <div class="totals-grid">
-      <div class="totals-block" id="arsBlock">
+      <div class="totals-block">
         <div class="totals-block-title">Pesos (ARS)</div>
         <div class="totals-row">
           <span class="label">Total</span>
@@ -695,7 +777,7 @@ td.share  { font-variant-numeric: tabular-nums; }
           <span class="value" id="pinaARS">$0,00</span>
         </div>
       </div>
-      <div class="totals-block" id="usdBlock">
+      <div class="totals-block">
         <div class="totals-block-title">Dólares (USD)</div>
         <div class="totals-row">
           <span class="label">Total</span>
@@ -712,13 +794,13 @@ td.share  { font-variant-numeric: tabular-nums; }
       </div>
     </div>
     <div class="pina-owes">
-      <div class="pina-owes-label">Pina te debe</div>
+      <div class="pina-owes-label" id="pinaOwesLabel">Gastos Pina</div>
       <div class="pina-owes-amount" id="pinaOwes">—</div>
     </div>
   </div>
 
   <!-- PRINT EXPENSE TABLE (only shown when printing) -->
-  <table class="print-expense-table" id="printExpenseTable">
+  <table class="print-expense-table">
     <thead><tr><th>Concepto</th><th>Moneda</th><th>Monto</th><th>Split</th><th>Mati</th><th>Pina</th></tr></thead>
     <tbody id="printTbody"></tbody>
   </table>
@@ -739,11 +821,11 @@ td.share  { font-variant-numeric: tabular-nums; }
 // ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const STORAGE_KEY = 'casapi_months';
 const RECURRING_TEMPLATES = [
-  { name: 'Alquiler',      currency: 'ARS' },
-  { name: 'Expensas',      currency: 'ARS' },
-  { name: 'Telecentro',    currency: 'ARS' },
-  { name: 'Luz / EDESUR',  currency: 'ARS' },
-  { name: 'Gas / METROGAS',currency: 'ARS' },
+  { name: 'Alquiler',       currency: 'ARS' },
+  { name: 'Expensas',       currency: 'ARS' },
+  { name: 'Telecentro',     currency: 'ARS' },
+  { name: 'Luz / EDESUR',   currency: 'ARS' },
+  { name: 'Gas / METROGAS', currency: 'ARS' },
 ];
 
 const MONTH_NAMES_ES = [
@@ -752,9 +834,9 @@ const MONTH_NAMES_ES = [
 ];
 
 // ─── STATE ────────────────────────────────────────────────────────────────────
-let allMonths = {};       // { "YYYY-MM": monthRecord }
-let currentKey = '';      // "YYYY-MM"
-let editingItemId = null; // id of item currently being edited
+let allMonths = {};
+let currentKey = '';
+let editingItemId = null;
 
 // ─── UTILS ────────────────────────────────────────────────────────────────────
 function todayKey() {
@@ -823,7 +905,6 @@ function newItemFromTemplate(tpl) {
 function createMonthRecord(key) {
   return {
     key,
-    tc: 0,
     matiSplit: 75,
     pinaSplit: 25,
     items: RECURRING_TEMPLATES.map(newItemFromTemplate),
@@ -843,12 +924,9 @@ function getSortedKeys() {
   return Object.keys(allMonths).sort();
 }
 
-// ─── CURRENT MONTH ACCESSORS ──────────────────────────────────────────────────
 function getMonth() { return allMonths[currentKey]; }
 
-function isReadonly() {
-  return currentKey !== todayKey();
-}
+function isReadonly() { return currentKey !== todayKey(); }
 
 // ─── SPLIT CALC ───────────────────────────────────────────────────────────────
 function calcShares(item, month) {
@@ -866,18 +944,13 @@ function calcShares(item, month) {
 function calcTotals(month) {
   let totalARS = 0, matiARS = 0, pinaARS = 0;
   let totalUSD = 0, matiUSD = 0, pinaUSD = 0;
-
   for (const item of month.items) {
     const amt = parseFloat(item.amount) || 0;
     const { mati, pina } = calcShares(item, month);
     if (item.currency === 'ARS') {
-      totalARS += amt;
-      matiARS += mati;
-      pinaARS += pina;
+      totalARS += amt; matiARS += mati; pinaARS += pina;
     } else {
-      totalUSD += amt;
-      matiUSD += mati;
-      pinaUSD += pina;
+      totalUSD += amt; matiUSD += mati; pinaUSD += pina;
     }
   }
   return { totalARS, matiARS, pinaARS, totalUSD, matiUSD, pinaUSD };
@@ -890,27 +963,18 @@ function renderAll() {
 
   const readonly = isReadonly();
 
-  // Header fields
-  document.getElementById('tcInput').value = month.tc || '';
   document.getElementById('matiSplitInput').value = month.matiSplit;
   document.getElementById('pinaSplitInput').value = month.pinaSplit;
-
-  // Month label
   document.getElementById('monthLabel').textContent = keyToLabel(currentKey);
   document.getElementById('readonlyBadge').style.display = readonly ? '' : 'none';
 
-  // Nav buttons
   const keys = getSortedKeys();
   const idx = keys.indexOf(currentKey);
   document.getElementById('prevMonthBtn').disabled = idx <= 0;
   document.getElementById('nextMonthBtn').disabled = idx >= keys.length - 1;
 
-  // Header inputs readonly
-  document.getElementById('tcInput').disabled = readonly;
   document.getElementById('matiSplitInput').disabled = readonly;
   document.getElementById('pinaSplitInput').disabled = readonly;
-
-  // Add row button
   document.getElementById('addRowBtnWrap').style.display = readonly ? 'none' : '';
 
   renderTable(month, readonly);
@@ -955,17 +1019,19 @@ function buildViewRow(item, month, readonly) {
     <td class="share">${fmtAmount(pina, item.currency)}</td>
     <td>
       <div class="actions-cell">
-        ${!readonly ? `<button class="btn btn-sm" onclick="startEdit('${item.id}')">✏️ Editar</button>
-        <button class="btn btn-sm btn-danger" onclick="deleteItem('${item.id}')">✕</button>` : '—'}
+        ${!readonly
+          ? `<button class="btn btn-sm" onclick="startEdit('${item.id}')">✏️ Editar</button>
+             <button class="btn btn-sm btn-danger" onclick="deleteItem('${item.id}')">✕</button>`
+          : '—'}
       </div>
     </td>`;
   return tr;
 }
 
 function buildEditRow(item, month) {
-  const hasOverride = !!item.splitOverride;
-  const matiOvr = hasOverride ? item.splitOverride.mati : month.matiSplit;
-  const pinaOvr = hasOverride ? item.splitOverride.pina : month.pinaSplit;
+  // Always show split inputs; pre-fill with override values if exists, else global
+  const matiVal = item.splitOverride ? item.splitOverride.mati : month.matiSplit;
+  const pinaVal = item.splitOverride ? item.splitOverride.pina : month.pinaSplit;
 
   const tr = document.createElement('tr');
   tr.className = 'edit-row';
@@ -979,20 +1045,17 @@ function buildEditRow(item, month) {
     </td>
     <td><input type="number" id="eAmount" value="${item.amount||''}" placeholder="0" min="0" step="0.01"></td>
     <td colspan="3">
-      <div class="split-override-row">
-        <label>
-          <input type="checkbox" id="eOverrideCheck" ${hasOverride?'checked':''} onchange="toggleOverrideInputs()">
-          Personalizar split
-        </label>
-        <div class="split-override-inputs" id="overrideInputs" style="display:${hasOverride?'flex':'none'}">
+      <div class="split-edit-row">
+        <div class="split-edit-inputs">
           <span style="font-size:12px;color:var(--text-muted)">Mati</span>
-          <input type="number" id="eMati" value="${matiOvr}" min="0" max="100" step="1" oninput="syncSplitInputs('mati')">
+          <input type="number" id="eMati" value="${matiVal}" min="0" max="100" step="1" oninput="syncSplitInputs('mati')">
           <span style="font-size:12px">%</span>
           <span style="font-size:12px;color:var(--text-muted)">Pina</span>
-          <input type="number" id="ePina" value="${pinaOvr}" min="0" max="100" step="1" oninput="syncSplitInputs('pina')">
+          <input type="number" id="ePina" value="${pinaVal}" min="0" max="100" step="1" oninput="syncSplitInputs('pina')">
           <span style="font-size:12px">%</span>
           <span class="split-sum-hint" id="splitSumHint"></span>
         </div>
+        <button class="btn btn-sm" onclick="resetToGlobalSplit()" title="Usar el split global del mes">↺ Global (${month.matiSplit}%/${month.pinaSplit}%)</button>
       </div>
     </td>
     <td>
@@ -1004,9 +1067,11 @@ function buildEditRow(item, month) {
   return tr;
 }
 
-function toggleOverrideInputs() {
-  const checked = document.getElementById('eOverrideCheck').checked;
-  document.getElementById('overrideInputs').style.display = checked ? 'flex' : 'none';
+function resetToGlobalSplit() {
+  const month = getMonth();
+  if (!month) return;
+  document.getElementById('eMati').value = month.matiSplit;
+  document.getElementById('ePina').value = month.pinaSplit;
   updateSplitHint();
 }
 
@@ -1049,6 +1114,8 @@ function renderTotals(month) {
   document.getElementById('matiUSD').textContent  = fmtUSD(t.matiUSD);
   document.getElementById('pinaUSD').textContent  = fmtUSD(t.pinaUSD);
 
+  document.getElementById('pinaOwesLabel').textContent = `Gastos Pina — ${keyToLabel(currentKey)}`;
+
   const parts = [];
   if (t.pinaARS > 0.001) parts.push(fmtARS(t.pinaARS));
   if (t.pinaUSD > 0.001) parts.push(fmtUSD(t.pinaUSD));
@@ -1056,18 +1123,19 @@ function renderTotals(month) {
 }
 
 function renderPrintHeader(month) {
-  const el = document.getElementById('printHeader');
-  el.innerHTML = `<h2 style="margin-bottom:4px">Casa Pi — ${keyToLabel(month.key)}</h2>
-    <p style="color:#666;font-size:13px">TC MEP: ${month.tc ? fmtARS(month.tc) : '—'} &nbsp;|&nbsp; Split: Mati ${month.matiSplit}% / Pina ${month.pinaSplit}%</p>`;
+  document.getElementById('printHeader').innerHTML =
+    `<h2 style="margin-bottom:4px">Casa Pipi's — ${keyToLabel(month.key)}</h2>
+     <p style="color:#666;font-size:13px">Split global: Mati ${month.matiSplit}% / Pina ${month.pinaSplit}%</p>`;
 
-  // Fill print expense table
   const ptbody = document.getElementById('printTbody');
   ptbody.innerHTML = '';
   for (const item of month.items) {
     const { mati, pina, matiPct, pinaPct } = calcShares(item, month);
     const amt = parseFloat(item.amount) || 0;
     const tr = document.createElement('tr');
-    tr.innerHTML = `<td>${escHtml(item.name)}</td><td>${item.currency}</td>
+    tr.innerHTML = `
+      <td>${escHtml(item.name)}</td>
+      <td>${item.currency}</td>
       <td>${fmtAmount(amt, item.currency)}</td>
       <td>${item.splitOverride ? `${matiPct}%/${pinaPct}%` : 'Global'}</td>
       <td>${fmtAmount(mati, item.currency)}</td>
@@ -1080,11 +1148,7 @@ function renderPrintHeader(month) {
 function startEdit(id) {
   editingItemId = id;
   renderAll();
-  // Focus first input
-  setTimeout(() => {
-    const el = document.getElementById('eName');
-    if (el) el.focus();
-  }, 50);
+  setTimeout(() => { const el = document.getElementById('eName'); if (el) el.focus(); }, 50);
 }
 
 function cancelEdit() {
@@ -1099,18 +1163,18 @@ function saveEdit(id) {
   const name     = (document.getElementById('eName')?.value || '').trim();
   const currency = document.getElementById('eCurrency')?.value || 'ARS';
   const amount   = parseFloat(document.getElementById('eAmount')?.value) || 0;
-  const override = document.getElementById('eOverrideCheck')?.checked;
+  const m        = parseFloat(document.getElementById('eMati')?.value) || 0;
+  const p        = parseFloat(document.getElementById('ePina')?.value) || 0;
 
-  let splitOverride = null;
-  if (override) {
-    const m = parseFloat(document.getElementById('eMati')?.value) || 0;
-    const p = parseFloat(document.getElementById('ePina')?.value) || 0;
-    if (Math.abs(m + p - 100) > 0.01) {
-      showNotif('⚠ El split debe sumar 100%');
-      return;
-    }
-    splitOverride = { mati: m, pina: p };
+  if (Math.abs(m + p - 100) > 0.01) {
+    showNotif('⚠ El split debe sumar 100%');
+    return;
   }
+
+  // Store as override only if it differs from global split
+  const splitOverride = (m === month.matiSplit && p === month.pinaSplit)
+    ? null
+    : { mati: m, pina: p };
 
   const item = month.items.find(i => i.id === id);
   if (item) {
@@ -1137,22 +1201,13 @@ function deleteItem(id) {
 function addNewItem() {
   const month = getMonth();
   if (!month) return;
-  const newItem = {
-    id: uid(),
-    name: '',
-    currency: 'ARS',
-    amount: 0,
-    splitOverride: null,
-    isRecurring: false,
-  };
+  const newItem = { id: uid(), name: '', currency: 'ARS', amount: 0, splitOverride: null, isRecurring: false };
   month.items.push(newItem);
   editingItemId = newItem.id;
   saveAll();
   renderAll();
-  // Scroll to new row
   setTimeout(() => {
-    const tbody = document.getElementById('expenseTbody');
-    const lastRow = tbody.lastElementChild;
+    const lastRow = document.getElementById('expenseTbody').lastElementChild;
     if (lastRow) lastRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
   }, 100);
 }
@@ -1185,14 +1240,6 @@ function navigateMonth(delta) {
 }
 
 // ─── HEADER INPUTS ────────────────────────────────────────────────────────────
-document.getElementById('tcInput').addEventListener('change', function() {
-  const month = getMonth();
-  if (!month || isReadonly()) return;
-  month.tc = parseFloat(this.value) || 0;
-  saveAll();
-  renderAll();
-});
-
 document.getElementById('matiSplitInput').addEventListener('change', function() {
   const month = getMonth();
   if (!month || isReadonly()) return;
@@ -1200,8 +1247,7 @@ document.getElementById('matiSplitInput').addEventListener('change', function() 
   month.matiSplit = m;
   month.pinaSplit = 100 - m;
   document.getElementById('pinaSplitInput').value = month.pinaSplit;
-  saveAll();
-  renderAll();
+  saveAll(); renderAll();
 });
 
 document.getElementById('pinaSplitInput').addEventListener('change', function() {
@@ -1211,8 +1257,7 @@ document.getElementById('pinaSplitInput').addEventListener('change', function() 
   month.pinaSplit = p;
   month.matiSplit = 100 - p;
   document.getElementById('matiSplitInput').value = month.matiSplit;
-  saveAll();
-  renderAll();
+  saveAll(); renderAll();
 });
 
 document.getElementById('prevMonthBtn').addEventListener('click', () => navigateMonth(-1));
@@ -1252,25 +1297,16 @@ document.getElementById('modalOverlay').addEventListener('click', function(e) {
 });
 
 function goToMonth(key) {
-  currentKey = key;
-  editingItemId = null;
-  closeModal();
-  renderAll();
+  currentKey = key; editingItemId = null; closeModal(); renderAll();
 }
 
 function deleteMonth(key) {
   if (!confirm(`¿Borrar el registro de ${keyToLabel(key)}? Esta acción no se puede deshacer.`)) return;
   delete allMonths[key];
   saveAll();
-  // Navigate to latest remaining month
   const keys = getSortedKeys();
-  if (keys.length) {
-    currentKey = keys[keys.length - 1];
-  } else {
-    currentKey = ensureCurrentMonth();
-  }
-  closeModal();
-  renderAll();
+  currentKey = keys.length ? keys[keys.length - 1] : ensureCurrentMonth();
+  closeModal(); renderAll();
   showNotif('Mes borrado');
 }
 
@@ -1281,8 +1317,7 @@ function buildTextSummary() {
   const t = calcTotals(month);
   const lines = [];
 
-  lines.push(`Casa Pi — ${keyToLabel(month.key)}`);
-  if (month.tc) lines.push(`TC MEP: ${fmtARS(month.tc)}`);
+  lines.push(`Casa Pipi's — ${keyToLabel(month.key)}`);
   lines.push('');
   lines.push('GASTOS:');
 
@@ -1291,9 +1326,7 @@ function buildTextSummary() {
     if (!amt) continue;
     const { pina } = calcShares(item, month);
     const cur = item.currency;
-    const amtStr = cur === 'USD' ? fmtUSD(amt) : fmtARS(amt);
-    const pinaStr = cur === 'USD' ? fmtUSD(pina) : fmtARS(pina);
-    lines.push(`• ${item.name}: ${amtStr} → Pina: ${pinaStr}`);
+    lines.push(`• ${item.name}: ${fmtAmount(amt, cur)} → Pina: ${fmtAmount(pina, cur)}`);
   }
 
   lines.push('');
@@ -1304,7 +1337,7 @@ function buildTextSummary() {
   const parts = [];
   if (t.pinaARS > 0.001) parts.push(fmtARS(t.pinaARS));
   if (t.pinaUSD > 0.001) parts.push(fmtUSD(t.pinaUSD));
-  lines.push(`Pina te debe: ${parts.join(' + ') || '$0,00'}`);
+  lines.push(`Gastos Pina ${keyToLabel(month.key)}: ${parts.join(' + ') || '$0,00'}`);
 
   return lines.join('\n');
 }
@@ -1314,7 +1347,6 @@ function copyText() {
   navigator.clipboard.writeText(text).then(() => {
     showNotif('✓ Texto copiado al portapapeles');
   }).catch(() => {
-    // Fallback
     const ta = document.createElement('textarea');
     ta.value = text;
     document.body.appendChild(ta);
@@ -1329,16 +1361,80 @@ function downloadPDF() {
   window.print();
 }
 
+function buildImageSnapshot() {
+  const month = getMonth();
+  if (!month) return;
+  const t = calcTotals(month);
+  const snap = document.getElementById('imageSnapshot');
+
+  // Build expense rows HTML
+  let rowsHtml = '';
+  for (const item of month.items) {
+    const amt = parseFloat(item.amount) || 0;
+    if (!amt) continue;
+    const { mati, pina, matiPct, pinaPct } = calcShares(item, month);
+    const hasOvr = !!item.splitOverride;
+    const splitTxt = hasOvr ? `${matiPct}%/${pinaPct}%` : 'Global';
+    const badgeStyle = item.currency === 'USD'
+      ? 'background:#dcfce7;color:#166534;border-radius:3px;padding:1px 5px;font-size:11px;font-weight:700'
+      : 'background:#dbeafe;color:#1e40af;border-radius:3px;padding:1px 5px;font-size:11px;font-weight:700';
+    rowsHtml += `<tr>
+      <td>${escHtml(item.name)}</td>
+      <td><span style="${badgeStyle}">${item.currency}</span></td>
+      <td style="font-weight:600;font-variant-numeric:tabular-nums">${fmtAmount(amt, item.currency)}</td>
+      <td style="font-size:12px;color:#6b7280">${splitTxt}</td>
+      <td style="font-variant-numeric:tabular-nums">${fmtAmount(mati, item.currency)}</td>
+      <td style="font-variant-numeric:tabular-nums;color:#0d9488;font-weight:600">${fmtAmount(pina, item.currency)}</td>
+    </tr>`;
+  }
+
+  const pinaAmounts = [];
+  if (t.pinaARS > 0.001) pinaAmounts.push(fmtARS(t.pinaARS));
+  if (t.pinaUSD > 0.001) pinaAmounts.push(fmtUSD(t.pinaUSD));
+  const pinaTotal = pinaAmounts.join(' + ') || '$0,00';
+
+  snap.innerHTML = `
+    <div class="snap-header">
+      <div class="snap-title">🏠 Casa Pipi's</div>
+      <div class="snap-sub">${keyToLabel(month.key)} &nbsp;·&nbsp; Split global: Mati ${month.matiSplit}% / Pina ${month.pinaSplit}%</div>
+    </div>
+    <table class="snap-table">
+      <thead><tr>
+        <th>Concepto</th><th>Moneda</th><th>Monto</th><th>Split</th><th>Mati</th><th>Pina</th>
+      </tr></thead>
+      <tbody>${rowsHtml || '<tr><td colspan="6" style="text-align:center;color:#6b7280;padding:12px">Sin gastos cargados</td></tr>'}</tbody>
+    </table>
+    <div class="snap-totals">
+      <div class="snap-block">
+        <div class="snap-block-title">Pesos (ARS)</div>
+        <div class="snap-row"><span class="lbl">Total</span><span class="val">${fmtARS(t.totalARS)}</span></div>
+        <div class="snap-row"><span class="lbl">Mati</span><span class="val">${fmtARS(t.matiARS)}</span></div>
+        <div class="snap-row"><span class="lbl">Pina</span><span class="val hi">${fmtARS(t.pinaARS)}</span></div>
+      </div>
+      <div class="snap-block">
+        <div class="snap-block-title">Dólares (USD)</div>
+        <div class="snap-row"><span class="lbl">Total</span><span class="val">${fmtUSD(t.totalUSD)}</span></div>
+        <div class="snap-row"><span class="lbl">Mati</span><span class="val">${fmtUSD(t.matiUSD)}</span></div>
+        <div class="snap-row"><span class="lbl">Pina</span><span class="val hi">${fmtUSD(t.pinaUSD)}</span></div>
+      </div>
+    </div>
+    <div class="snap-pina">
+      <div class="snap-pina-lbl">Gastos Pina — ${keyToLabel(month.key)}</div>
+      <div class="snap-pina-val">${pinaTotal}</div>
+    </div>`;
+}
+
 function saveImage() {
-  const card = document.getElementById('totalsCard');
   if (!window.html2canvas) {
     showNotif('⚠ html2canvas no disponible (requiere conexión)');
     return;
   }
+  buildImageSnapshot();
   showNotif('Generando imagen...');
-  html2canvas(card, { backgroundColor: '#ffffff', scale: 2 }).then(canvas => {
+  const snap = document.getElementById('imageSnapshot');
+  html2canvas(snap, { backgroundColor: '#f8f6f2', scale: 2, useCORS: true }).then(canvas => {
     const link = document.createElement('a');
-    link.download = `casapi-${currentKey}.png`;
+    link.download = `casapipis-${currentKey}.png`;
     link.href = canvas.toDataURL('image/png');
     link.click();
     showNotif('✓ Imagen descargada');
@@ -1348,10 +1444,8 @@ function saveImage() {
 // ─── ESCAPE HELPERS ───────────────────────────────────────────────────────────
 function escHtml(str) {
   return String(str)
-    .replace(/&/g,'&amp;')
-    .replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;')
-    .replace(/"/g,'&quot;');
+    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
 }
 
 function escAttr(str) {
