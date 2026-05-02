@@ -752,7 +752,7 @@ td.share  { font-variant-numeric: tabular-nums; }
   <div class="header-top">
     <div>
       <div class="app-title">🏠 Casa Pipi's</div>
-      <div class="app-subtitle">Gastos del hogar · v1.3</div>
+      <div class="app-subtitle">Gastos del hogar · v1.2</div>
     </div>
   </div>
   <div class="header-meta">
@@ -880,28 +880,6 @@ td.share  { font-variant-numeric: tabular-nums; }
       Exportá el historial en esta PC e importalo en cualquier otro dispositivo para tener todos tus datos disponibles.
     </div>
     <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importHistory(event)">
-  </div>
-
-  <!-- GITHUB SYNC -->
-  <div class="sync-section">
-    <div class="export-title">Sincronización con GitHub</div>
-    <div class="sync-token-row">
-      <span class="sync-label">Token de acceso:</span>
-      <div class="sync-token-input-wrap">
-        <input type="password" id="ghTokenInput" placeholder="ghp_xxxxxxxxxxxx" autocomplete="off">
-        <button class="btn btn-sm" onclick="toggleTokenVisibility()" title="Mostrar/ocultar">👁</button>
-        <button class="btn btn-sm btn-primary" onclick="saveGhToken()">Guardar token</button>
-      </div>
-    </div>
-    <div class="sync-status" id="syncStatus">● Sin token configurado</div>
-    <div class="export-btns">
-      <button class="btn btn-primary" onclick="pushToGithub()">☁ Guardar en GitHub</button>
-      <button class="btn" onclick="pullFromGithub()">⬇ Traer desde GitHub</button>
-    </div>
-    <div style="margin-top:10px;font-size:12px;color:var(--text-muted);line-height:1.6">
-      Los datos se guardan en <code style="background:var(--bg);padding:1px 5px;border-radius:3px;font-size:11px">data/history.json</code> dentro de tu repo.
-      Con el token configurado, al abrir la app se carga el historial de GitHub automáticamente.
-    </div>
   </div>
 
 </main>
@@ -1569,181 +1547,34 @@ function importHistory(event) {
     }
 
     const imported = payload.months || payload;
-    _applyImportedMonths(imported, false);
-  };
-  reader.readAsText(file);
-}
+    const importedKeys = Object.keys(imported);
+    if (!importedKeys.length) { showNotif('⚠ El archivo no contiene datos'); return; }
 
-// ─── GITHUB SYNC ─────────────────────────────────────────────────────────────
+    const localKeys = getSortedKeys();
+    const newKeys = importedKeys.filter(k => !allMonths[k]);
+    const conflictKeys = importedKeys.filter(k => allMonths[k]);
 
-function loadGhToken() { return localStorage.getItem(GH_TOKEN_KEY) || ''; }
-
-function saveGhToken() {
-  const val = document.getElementById('ghTokenInput').value.trim();
-  if (!val) { showNotif('⚠ Ingresá un token antes de guardar'); return; }
-  localStorage.setItem(GH_TOKEN_KEY, val);
-  renderSyncStatus();
-  showNotif('✓ Token guardado');
-}
-
-function toggleTokenVisibility() {
-  const el = document.getElementById('ghTokenInput');
-  el.type = el.type === 'password' ? 'text' : 'password';
-}
-
-function renderSyncStatus(msg, cls) {
-  const el = document.getElementById('syncStatus');
-  if (!el) return;
-  const token = loadGhToken();
-  if (msg) {
-    el.textContent = msg;
-    el.className = 'sync-status ' + (cls || '');
-    return;
-  }
-  if (!token) {
-    el.textContent = '● Sin token configurado';
-    el.className = 'sync-status';
-  } else {
-    const last = localStorage.getItem(GH_LAST_SYNC_KEY);
-    if (last) {
-      const d = new Date(last);
-      const fmt = d.toLocaleDateString('es-AR') + ' ' + d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-      el.textContent = `● Último guardado en GitHub: ${fmt}`;
-      el.className = 'sync-status ok';
-    } else {
-      el.textContent = '● Token configurado — sin guardar aún';
-      el.className = 'sync-status ok';
-    }
-  }
-  // Pre-fill token input (masked)
-  const input = document.getElementById('ghTokenInput');
-  if (input && token) input.value = token;
-}
-
-// Encode/decode JSON with proper unicode support for GitHub API (base64)
-function toBase64(str)   { return btoa(unescape(encodeURIComponent(str))); }
-function fromBase64(str) { return decodeURIComponent(escape(atob(str))); }
-
-async function ghGetFile(token) {
-  const res = await fetch(GH_API_URL, {
-    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
-  });
-  if (res.status === 404) return null;
-  if (!res.ok) throw new Error(`GitHub API error ${res.status}`);
-  return await res.json(); // { content, sha, ... }
-}
-
-async function pushToGithub() {
-  const token = loadGhToken();
-  if (!token) { showNotif('⚠ Configurá el token primero'); return; }
-
-  renderSyncStatus('⟳ Guardando en GitHub...', 'busy');
-  try {
-    const existing = await ghGetFile(token);
-    const payload  = { version: 2, savedAt: new Date().toISOString(), months: allMonths };
-    const content  = toBase64(JSON.stringify(payload, null, 2));
-    const body     = {
-      message: `Casa Pipi's: actualizar historial ${new Date().toLocaleDateString('es-AR')}`,
-      content,
-      ...(existing ? { sha: existing.sha } : {})
-    };
-    const res = await fetch(GH_API_URL, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || `Error ${res.status}`);
-    }
-    localStorage.setItem(GH_LAST_SYNC_KEY, new Date().toISOString());
-    renderSyncStatus();
-    showNotif('✓ Historial guardado en GitHub');
-  } catch(e) {
-    renderSyncStatus(`✗ Error: ${e.message}`, 'error');
-    showNotif('⚠ No se pudo guardar en GitHub');
-  }
-}
-
-async function pullFromGithub() {
-  const token = loadGhToken();
-  if (!token) { showNotif('⚠ Configurá el token primero'); return; }
-
-  renderSyncStatus('⟳ Trayendo desde GitHub...', 'busy');
-  try {
-    const file = await ghGetFile(token);
-    if (!file) {
-      renderSyncStatus();
-      showNotif('ℹ No hay historial guardado en GitHub todavía');
-      return;
-    }
-    const payload  = JSON.parse(fromBase64(file.content.replace(/\n/g, '')));
-    const imported = payload.months || payload;
-    _applyImportedMonths(imported, true);
-    renderSyncStatus();
-  } catch(e) {
-    renderSyncStatus(`✗ Error: ${e.message}`, 'error');
-    showNotif('⚠ No se pudo traer desde GitHub');
-  }
-}
-
-async function autoLoadFromGithub() {
-  const token = loadGhToken();
-  if (!token) return;
-  renderSyncStatus('⟳ Cargando historial de GitHub...', 'busy');
-  try {
-    const file = await ghGetFile(token);
-    if (!file) { renderSyncStatus(); return; }
-    const payload  = JSON.parse(fromBase64(file.content.replace(/\n/g, '')));
-    const imported = payload.months || payload;
-    // Silent merge: add months not present locally, keep local for conflicts
-    let added = 0;
-    for (const k of Object.keys(imported)) {
-      if (!allMonths[k]) { allMonths[k] = imported[k]; added++; }
-    }
-    if (added) {
-      saveAll();
-      const keys = getSortedKeys();
-      currentKey = keys[keys.length - 1];
-      renderAll();
-    }
-    renderSyncStatus();
-    if (added) showNotif(`✓ ${added} ${added === 1 ? 'mes cargado' : 'meses cargados'} desde GitHub`);
-  } catch(e) {
-    renderSyncStatus(`✗ Error al conectar con GitHub`, 'error');
-  }
-}
-
-// Shared merge logic used by both pull and importHistory
-function _applyImportedMonths(imported, githubWinsOnConflict) {
-  const importedKeys  = Object.keys(imported);
-  const newKeys       = importedKeys.filter(k => !allMonths[k]);
-  const conflictKeys  = importedKeys.filter(k =>  allMonths[k]);
-
-  if (!importedKeys.length) { showNotif('ℹ El archivo no tiene datos'); return; }
-
-  if (conflictKeys.length && !githubWinsOnConflict) {
     let msg = `Se encontraron ${importedKeys.length} ${importedKeys.length === 1 ? 'mes' : 'meses'}.\n`;
     if (newKeys.length)      msg += `• ${newKeys.length} nuevos (se agregarán)\n`;
-    if (conflictKeys.length) msg += `• ${conflictKeys.length} ya existentes:\n\n  OK = Reemplazar con los del archivo\n  Cancelar = Conservar los locales`;
-    const replace = confirm(msg);
-    for (const k of newKeys) allMonths[k] = imported[k];
-    if (replace) for (const k of conflictKeys) allMonths[k] = imported[k];
-  } else {
-    for (const k of newKeys)      allMonths[k] = imported[k];
-    for (const k of conflictKeys) allMonths[k] = imported[k]; // GitHub wins silently on pull
-  }
+    if (conflictKeys.length) msg += `• ${conflictKeys.length} ya existentes:\n  ¿Qué hacer con ellos?\n\n  OK = Reemplazar con los del archivo\n  Cancelar = Conservar los locales`;
 
-  saveAll();
-  const keys = getSortedKeys();
-  currentKey = keys[keys.length - 1];
-  editingItemId = null;
-  renderAll();
-  showNotif(`✓ ${importedKeys.length} ${importedKeys.length === 1 ? 'mes importado' : 'meses importados'}`);
+    if (conflictKeys.length) {
+      const replace = confirm(msg);
+      for (const k of newKeys) allMonths[k] = imported[k];
+      if (replace) for (const k of conflictKeys) allMonths[k] = imported[k];
+    } else {
+      if (!confirm(msg + '\n¿Importar?')) return;
+      for (const k of newKeys) allMonths[k] = imported[k];
+    }
+
+    saveAll();
+    const keys = getSortedKeys();
+    currentKey = keys[keys.length - 1];
+    editingItemId = null;
+    renderAll();
+    showNotif(`✓ Historial importado (${importedKeys.length} ${importedKeys.length === 1 ? 'mes' : 'meses'})`);
+  };
+  reader.readAsText(file);
 }
 
 // ─── ESCAPE HELPERS ───────────────────────────────────────────────────────────
