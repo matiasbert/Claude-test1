@@ -1,0 +1,53 @@
+{
+  "version": 2,
+  "savedAt": "2026-05-02T05:28:42.291Z",
+  "months": {
+    "2026-05": {
+      "key": "2026-05",
+      "matiSplit": 75,
+      "pinaSplit": 25,
+      "items": [
+        {
+          "id": "geuy7ap3monvwwjb",
+          "name": "Alquiler",
+          "currency": "ARS",
+          "amount": 585499,
+          "splitOverride": null,
+          "isRecurring": true
+        },
+        {
+          "id": "45fx7xtzmonvwwjb",
+          "name": "Expensas",
+          "currency": "ARS",
+          "amount": 0,
+          "splitOverride": null,
+          "isRecurring": true
+        },
+        {
+          "id": "9f1vr1p1monvwwjb",
+          "name": "Telecentro",
+          "currency": "ARS",
+          "amount": 0,
+          "splitOverride": null,
+          "isRecurring": true
+        },
+        {
+          "id": "sjerdfadmonvwwjb",
+          "name": "Luz / EDESUR",
+          "currency": "ARS",
+          "amount": 0,
+          "splitOverride": null,
+          "isRecurring": true
+        },
+        {
+          "id": "qnt991scmonvwwjb",
+          "name": "Gas / METROGAS",
+          "currency": "ARS",
+          "amount": 0,
+          "splitOverride": null,
+          "isRecurring": true
+        }
+      ]
+    }
+  }
+}
