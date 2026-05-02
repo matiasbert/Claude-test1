@@ -1,0 +1,1369 @@
+<!DOCTYPE html>
+<html lang="es-AR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Casa Pi — Gastos del hogar</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+  --bg: #f8f6f2;
+  --surface: #ffffff;
+  --border: #e2ddd6;
+  --text: #2c3440;
+  --text-muted: #6b7280;
+  --accent: #0d9488;
+  --accent-dark: #0f766e;
+  --accent-light: #ccfbf1;
+  --danger: #dc2626;
+  --danger-light: #fee2e2;
+  --row-alt: #faf9f7;
+  --shadow: 0 2px 8px rgba(0,0,0,0.08), 0 1px 2px rgba(0,0,0,0.06);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.08);
+}
+
+body {
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  font-size: 15px;
+  line-height: 1.5;
+  min-height: 100vh;
+}
+
+/* HEADER */
+.app-header {
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  padding: 16px 20px;
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  box-shadow: var(--shadow);
+}
+
+.header-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.app-title {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  letter-spacing: -0.3px;
+}
+
+.app-subtitle {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-top: 1px;
+}
+
+.header-meta {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 12px;
+}
+
+.meta-field {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+}
+
+.meta-field label {
+  color: var(--text-muted);
+  white-space: nowrap;
+  font-weight: 500;
+}
+
+.meta-input {
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  padding: 4px 8px;
+  font-size: 13px;
+  width: 90px;
+  background: var(--bg);
+  color: var(--text);
+  font-family: inherit;
+}
+
+.meta-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+
+.split-inputs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.split-inputs .meta-input { width: 56px; }
+.split-sep { color: var(--text-muted); font-weight: 500; }
+
+/* MONTH NAV */
+.month-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 20px;
+  background: var(--surface);
+  border-bottom: 1px solid var(--border);
+  gap: 12px;
+}
+
+.month-label {
+  font-size: 18px;
+  font-weight: 700;
+  color: var(--text);
+  text-align: center;
+  flex: 1;
+}
+
+.readonly-badge {
+  font-size: 11px;
+  background: #fef3c7;
+  color: #92400e;
+  border: 1px solid #fde68a;
+  border-radius: 12px;
+  padding: 2px 8px;
+  font-weight: 600;
+  margin-left: 8px;
+}
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  padding: 7px 14px;
+  border-radius: 7px;
+  border: 1px solid var(--border);
+  background: var(--surface);
+  color: var(--text);
+  font-size: 13px;
+  font-weight: 500;
+  cursor: pointer;
+  font-family: inherit;
+  white-space: nowrap;
+  transition: none;
+}
+
+.btn:hover { background: var(--bg); }
+.btn:active { opacity: 0.8; }
+
+.btn-primary {
+  background: var(--accent);
+  color: #fff;
+  border-color: var(--accent-dark);
+}
+
+.btn-primary:hover { background: var(--accent-dark); }
+
+.btn-danger {
+  background: var(--danger-light);
+  color: var(--danger);
+  border-color: #fca5a5;
+}
+
+.btn-danger:hover { background: #fecaca; }
+
+.btn-icon {
+  padding: 6px 10px;
+  font-size: 16px;
+}
+
+.btn-sm {
+  padding: 4px 10px;
+  font-size: 12px;
+}
+
+/* MAIN CONTENT */
+.main {
+  max-width: 1100px;
+  margin: 0 auto;
+  padding: 20px;
+}
+
+/* TABLE */
+.table-wrap {
+  background: var(--surface);
+  border-radius: 10px;
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow);
+  overflow: hidden;
+  margin-bottom: 20px;
+}
+
+.table-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 16px;
+  border-bottom: 1px solid var(--border);
+  background: var(--row-alt);
+}
+
+.table-title {
+  font-weight: 700;
+  font-size: 15px;
+}
+
+.table-scroll {
+  overflow-x: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+table {
+  width: 100%;
+  border-collapse: collapse;
+  min-width: 700px;
+}
+
+thead th {
+  padding: 10px 12px;
+  text-align: left;
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  background: var(--row-alt);
+  border-bottom: 1px solid var(--border);
+  white-space: nowrap;
+}
+
+tbody tr:nth-child(even) { background: var(--row-alt); }
+tbody tr:hover { background: var(--accent-light); }
+
+td {
+  padding: 10px 12px;
+  font-size: 14px;
+  border-bottom: 1px solid var(--border);
+  vertical-align: middle;
+}
+
+tbody tr:last-child td { border-bottom: none; }
+
+td.currency-badge {
+  font-size: 12px;
+  font-weight: 600;
+}
+
+.badge-ars {
+  display: inline-block;
+  background: #dbeafe;
+  color: #1e40af;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.badge-usd {
+  display: inline-block;
+  background: #dcfce7;
+  color: #166534;
+  border-radius: 4px;
+  padding: 2px 7px;
+  font-size: 11px;
+  font-weight: 700;
+}
+
+.split-label {
+  font-size: 12px;
+  color: var(--text-muted);
+  white-space: nowrap;
+}
+
+.split-override-label {
+  font-size: 12px;
+  color: var(--accent);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+td.amount { font-weight: 600; font-variant-numeric: tabular-nums; }
+td.share  { font-variant-numeric: tabular-nums; }
+
+.actions-cell {
+  white-space: nowrap;
+  display: flex;
+  gap: 6px;
+  align-items: center;
+}
+
+/* INLINE EDIT ROW */
+.edit-row td {
+  background: var(--accent-light) !important;
+  padding: 8px 10px;
+  vertical-align: top;
+}
+
+.edit-row input, .edit-row select {
+  border: 1px solid var(--accent);
+  border-radius: 5px;
+  padding: 5px 8px;
+  font-size: 13px;
+  font-family: inherit;
+  background: var(--surface);
+  color: var(--text);
+  width: 100%;
+}
+
+.edit-row input:focus, .edit-row select:focus {
+  outline: 2px solid var(--accent);
+  outline-offset: -1px;
+}
+
+.split-override-row {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  flex-wrap: wrap;
+}
+
+.split-override-row label {
+  font-size: 12px;
+  color: var(--text-muted);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.split-override-inputs {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.split-override-inputs input {
+  width: 52px !important;
+}
+
+.split-sum-hint {
+  font-size: 11px;
+  color: var(--text-muted);
+}
+
+.split-sum-hint.error { color: var(--danger); font-weight: 600; }
+
+/* ADD ROW */
+.add-row-btn-wrap {
+  padding: 12px 16px;
+  border-top: 1px solid var(--border);
+  background: var(--row-alt);
+}
+
+/* TOTALS */
+.totals-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  box-shadow: var(--shadow-lg);
+  padding: 20px;
+  margin-bottom: 20px;
+}
+
+.totals-title {
+  font-size: 16px;
+  font-weight: 700;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+
+.totals-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 560px) {
+  .totals-grid { grid-template-columns: 1fr; }
+}
+
+.totals-block {
+  background: var(--bg);
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  padding: 14px;
+}
+
+.totals-block-title {
+  font-size: 12px;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 10px;
+}
+
+.totals-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  margin-bottom: 6px;
+  font-size: 14px;
+}
+
+.totals-row:last-child { margin-bottom: 0; }
+
+.totals-row .label { color: var(--text-muted); }
+
+.totals-row .value {
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+
+.totals-row.highlight .value { color: var(--accent); font-size: 16px; }
+
+.pina-owes {
+  background: linear-gradient(135deg, var(--accent-light), #f0fdfa);
+  border: 2px solid var(--accent);
+  border-radius: 8px;
+  padding: 16px;
+  text-align: center;
+}
+
+.pina-owes-label {
+  font-size: 13px;
+  color: var(--text-muted);
+  margin-bottom: 6px;
+  font-weight: 500;
+}
+
+.pina-owes-amount {
+  font-size: 22px;
+  font-weight: 800;
+  color: var(--accent-dark);
+  font-variant-numeric: tabular-nums;
+}
+
+/* EXPORT */
+.export-section {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  padding: 16px 20px;
+  box-shadow: var(--shadow);
+  margin-bottom: 20px;
+}
+
+.export-title {
+  font-size: 14px;
+  font-weight: 700;
+  margin-bottom: 12px;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.export-btns {
+  display: flex;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* EMPTY STATE */
+.empty-state {
+  text-align: center;
+  padding: 40px 20px;
+  color: var(--text-muted);
+}
+
+.empty-state p { margin-top: 8px; font-size: 13px; }
+
+/* MONTH HISTORY MODAL */
+.modal-overlay {
+  display: none;
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 200;
+  align-items: center;
+  justify-content: center;
+}
+
+.modal-overlay.open { display: flex; }
+
+.modal {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 24px;
+  max-width: 420px;
+  width: 90%;
+  box-shadow: var(--shadow-lg);
+  max-height: 80vh;
+  overflow-y: auto;
+}
+
+.modal-title {
+  font-size: 17px;
+  font-weight: 700;
+  margin-bottom: 16px;
+}
+
+.month-list { list-style: none; }
+
+.month-list li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 12px;
+  border-radius: 7px;
+  cursor: pointer;
+  font-size: 14px;
+  border: 1px solid transparent;
+}
+
+.month-list li:hover { background: var(--bg); border-color: var(--border); }
+.month-list li.active { background: var(--accent-light); border-color: var(--accent); font-weight: 600; }
+
+.month-list-actions { display: flex; gap: 6px; }
+
+.modal-close {
+  float: right;
+  background: none;
+  border: none;
+  font-size: 20px;
+  cursor: pointer;
+  color: var(--text-muted);
+  line-height: 1;
+  padding: 2px 6px;
+  border-radius: 4px;
+}
+
+.modal-close:hover { background: var(--bg); }
+
+/* NOTIFICATION */
+.notif {
+  position: fixed;
+  bottom: 20px;
+  left: 50%;
+  transform: translateX(-50%);
+  background: #1e293b;
+  color: #fff;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  z-index: 999;
+  opacity: 0;
+  pointer-events: none;
+  box-shadow: var(--shadow-lg);
+}
+
+.notif.show { opacity: 1; }
+
+/* PRINT */
+@media print {
+  .app-header, .month-nav, .table-wrap, .export-section, .btn,
+  .add-row-btn-wrap, .actions-cell, .modal-overlay, .notif { display: none !important; }
+  body { background: #fff; font-size: 13px; }
+  .main { max-width: 100%; padding: 0; }
+  .totals-card {
+    box-shadow: none;
+    border: 1px solid #ccc;
+    break-inside: avoid;
+  }
+  .print-header { display: block !important; margin-bottom: 16px; }
+  .print-expense-table { display: table !important; width: 100%; border-collapse: collapse; }
+  .print-expense-table th, .print-expense-table td {
+    border: 1px solid #ccc;
+    padding: 6px 8px;
+    font-size: 12px;
+    text-align: left;
+  }
+  .print-expense-table thead { background: #f0f0f0; }
+}
+
+.print-header { display: none; }
+.print-expense-table { display: none; }
+</style>
+</head>
+<body>
+
+<!-- NOTIFICATION TOAST -->
+<div class="notif" id="notif"></div>
+
+<!-- MONTH HISTORY MODAL -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal">
+    <button class="modal-close" onclick="closeModal()">✕</button>
+    <div class="modal-title">Meses guardados</div>
+    <ul class="month-list" id="monthList"></ul>
+  </div>
+</div>
+
+<!-- APP HEADER -->
+<header class="app-header">
+  <div class="header-top">
+    <div>
+      <div class="app-title">🏠 Casa Pi</div>
+      <div class="app-subtitle">Gastos del hogar</div>
+    </div>
+  </div>
+  <div class="header-meta">
+    <div class="meta-field">
+      <label for="tcInput">TC MEP (ARS/USD):</label>
+      <input type="number" id="tcInput" class="meta-input" placeholder="1200" min="1" step="0.01">
+    </div>
+    <div class="meta-field">
+      <label>Split global:</label>
+      <div class="split-inputs">
+        <span style="font-size:12px;color:var(--text-muted)">Mati</span>
+        <input type="number" id="matiSplitInput" class="meta-input" value="75" min="0" max="100" step="1">
+        <span class="split-sep">%</span>
+        <span style="font-size:12px;color:var(--text-muted)">Pina</span>
+        <input type="number" id="pinaSplitInput" class="meta-input" value="25" min="0" max="100" step="1">
+        <span class="split-sep">%</span>
+      </div>
+    </div>
+  </div>
+</header>
+
+<!-- MONTH NAV -->
+<div class="month-nav">
+  <button class="btn btn-icon" id="prevMonthBtn" title="Mes anterior">‹</button>
+  <div style="display:flex;align-items:center;justify-content:center;flex:1;gap:8px;">
+    <span class="month-label" id="monthLabel">—</span>
+    <span class="readonly-badge" id="readonlyBadge" style="display:none">Solo lectura</span>
+  </div>
+  <div style="display:flex;gap:8px;">
+    <button class="btn btn-sm" id="historyBtn" onclick="openModal()">📋 Historial</button>
+    <button class="btn btn-primary btn-sm" id="newMonthBtn" onclick="createNewMonth()">+ Nuevo mes</button>
+  </div>
+  <button class="btn btn-icon" id="nextMonthBtn" title="Mes siguiente">›</button>
+</div>
+
+<!-- PRINT HEADER (visible only when printing) -->
+<div class="print-header" id="printHeader"></div>
+
+<!-- MAIN -->
+<main class="main" id="mainContent">
+
+  <!-- EXPENSE TABLE -->
+  <div class="table-wrap" id="tableWrap">
+    <div class="table-header">
+      <span class="table-title">Gastos</span>
+    </div>
+    <div class="table-scroll">
+      <table id="expenseTable">
+        <thead>
+          <tr>
+            <th>Concepto</th>
+            <th>Moneda</th>
+            <th>Monto</th>
+            <th>Split</th>
+            <th>Mati</th>
+            <th>Pina</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody id="expenseTbody"></tbody>
+      </table>
+    </div>
+    <div class="add-row-btn-wrap" id="addRowBtnWrap">
+      <button class="btn btn-sm btn-primary" onclick="addNewItem()">+ Agregar gasto</button>
+    </div>
+  </div>
+
+  <!-- TOTALS CARD -->
+  <div class="totals-card" id="totalsCard">
+    <div class="totals-title">Resumen del mes</div>
+    <div class="totals-grid">
+      <div class="totals-block" id="arsBlock">
+        <div class="totals-block-title">Pesos (ARS)</div>
+        <div class="totals-row">
+          <span class="label">Total</span>
+          <span class="value" id="totalARS">$0,00</span>
+        </div>
+        <div class="totals-row">
+          <span class="label">Mati</span>
+          <span class="value" id="matiARS">$0,00</span>
+        </div>
+        <div class="totals-row highlight">
+          <span class="label">Pina</span>
+          <span class="value" id="pinaARS">$0,00</span>
+        </div>
+      </div>
+      <div class="totals-block" id="usdBlock">
+        <div class="totals-block-title">Dólares (USD)</div>
+        <div class="totals-row">
+          <span class="label">Total</span>
+          <span class="value" id="totalUSD">USD 0,00</span>
+        </div>
+        <div class="totals-row">
+          <span class="label">Mati</span>
+          <span class="value" id="matiUSD">USD 0,00</span>
+        </div>
+        <div class="totals-row highlight">
+          <span class="label">Pina</span>
+          <span class="value" id="pinaUSD">USD 0,00</span>
+        </div>
+      </div>
+    </div>
+    <div class="pina-owes">
+      <div class="pina-owes-label">Pina te debe</div>
+      <div class="pina-owes-amount" id="pinaOwes">—</div>
+    </div>
+  </div>
+
+  <!-- PRINT EXPENSE TABLE (only shown when printing) -->
+  <table class="print-expense-table" id="printExpenseTable">
+    <thead><tr><th>Concepto</th><th>Moneda</th><th>Monto</th><th>Split</th><th>Mati</th><th>Pina</th></tr></thead>
+    <tbody id="printTbody"></tbody>
+  </table>
+
+  <!-- EXPORT -->
+  <div class="export-section">
+    <div class="export-title">Exportar</div>
+    <div class="export-btns">
+      <button class="btn" onclick="copyText()">📋 Copiar texto</button>
+      <button class="btn" onclick="downloadPDF()">🖨️ Descargar PDF</button>
+      <button class="btn" onclick="saveImage()">📷 Guardar imagen</button>
+    </div>
+  </div>
+
+</main>
+
+<script>
+// ─── CONSTANTS ────────────────────────────────────────────────────────────────
+const STORAGE_KEY = 'casapi_months';
+const RECURRING_TEMPLATES = [
+  { name: 'Alquiler',      currency: 'ARS' },
+  { name: 'Expensas',      currency: 'ARS' },
+  { name: 'Telecentro',    currency: 'ARS' },
+  { name: 'Luz / EDESUR',  currency: 'ARS' },
+  { name: 'Gas / METROGAS',currency: 'ARS' },
+];
+
+const MONTH_NAMES_ES = [
+  'Enero','Febrero','Marzo','Abril','Mayo','Junio',
+  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
+];
+
+// ─── STATE ────────────────────────────────────────────────────────────────────
+let allMonths = {};       // { "YYYY-MM": monthRecord }
+let currentKey = '';      // "YYYY-MM"
+let editingItemId = null; // id of item currently being edited
+
+// ─── UTILS ────────────────────────────────────────────────────────────────────
+function todayKey() {
+  const d = new Date();
+  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
+}
+
+function keyToLabel(key) {
+  const [y, m] = key.split('-');
+  return `${MONTH_NAMES_ES[parseInt(m,10)-1]} ${y}`;
+}
+
+function uid() {
+  return Math.random().toString(36).slice(2,10) + Date.now().toString(36);
+}
+
+function fmtARS(n) {
+  if (n === null || n === undefined || isNaN(n)) return '$0,00';
+  return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function fmtUSD(n) {
+  if (n === null || n === undefined || isNaN(n)) return 'USD 0,00';
+  return 'USD ' + n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+}
+
+function fmtAmount(n, currency) {
+  return currency === 'USD' ? fmtUSD(n) : fmtARS(n);
+}
+
+function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+
+function showNotif(msg) {
+  const el = document.getElementById('notif');
+  el.textContent = msg;
+  el.classList.add('show');
+  setTimeout(() => el.classList.remove('show'), 2500);
+}
+
+// ─── STORAGE ──────────────────────────────────────────────────────────────────
+function saveAll() {
+  localStorage.setItem(STORAGE_KEY, JSON.stringify(allMonths));
+}
+
+function loadAll() {
+  try {
+    const raw = localStorage.getItem(STORAGE_KEY);
+    if (raw) allMonths = JSON.parse(raw);
+  } catch(e) {
+    allMonths = {};
+  }
+}
+
+// ─── MONTH RECORD HELPERS ─────────────────────────────────────────────────────
+function newItemFromTemplate(tpl) {
+  return {
+    id: uid(),
+    name: tpl.name,
+    currency: tpl.currency,
+    amount: 0,
+    splitOverride: null,
+    isRecurring: true,
+  };
+}
+
+function createMonthRecord(key) {
+  return {
+    key,
+    tc: 0,
+    matiSplit: 75,
+    pinaSplit: 25,
+    items: RECURRING_TEMPLATES.map(newItemFromTemplate),
+  };
+}
+
+function ensureCurrentMonth() {
+  const key = todayKey();
+  if (!allMonths[key]) {
+    allMonths[key] = createMonthRecord(key);
+    saveAll();
+  }
+  return key;
+}
+
+function getSortedKeys() {
+  return Object.keys(allMonths).sort();
+}
+
+// ─── CURRENT MONTH ACCESSORS ──────────────────────────────────────────────────
+function getMonth() { return allMonths[currentKey]; }
+
+function isReadonly() {
+  return currentKey !== todayKey();
+}
+
+// ─── SPLIT CALC ───────────────────────────────────────────────────────────────
+function calcShares(item, month) {
+  const matiPct = item.splitOverride ? item.splitOverride.mati : month.matiSplit;
+  const pinaPct = item.splitOverride ? item.splitOverride.pina : month.pinaSplit;
+  const amt = parseFloat(item.amount) || 0;
+  return {
+    mati: amt * matiPct / 100,
+    pina: amt * pinaPct / 100,
+    matiPct,
+    pinaPct,
+  };
+}
+
+function calcTotals(month) {
+  let totalARS = 0, matiARS = 0, pinaARS = 0;
+  let totalUSD = 0, matiUSD = 0, pinaUSD = 0;
+
+  for (const item of month.items) {
+    const amt = parseFloat(item.amount) || 0;
+    const { mati, pina } = calcShares(item, month);
+    if (item.currency === 'ARS') {
+      totalARS += amt;
+      matiARS += mati;
+      pinaARS += pina;
+    } else {
+      totalUSD += amt;
+      matiUSD += mati;
+      pinaUSD += pina;
+    }
+  }
+  return { totalARS, matiARS, pinaARS, totalUSD, matiUSD, pinaUSD };
+}
+
+// ─── RENDER ───────────────────────────────────────────────────────────────────
+function renderAll() {
+  const month = getMonth();
+  if (!month) return;
+
+  const readonly = isReadonly();
+
+  // Header fields
+  document.getElementById('tcInput').value = month.tc || '';
+  document.getElementById('matiSplitInput').value = month.matiSplit;
+  document.getElementById('pinaSplitInput').value = month.pinaSplit;
+
+  // Month label
+  document.getElementById('monthLabel').textContent = keyToLabel(currentKey);
+  document.getElementById('readonlyBadge').style.display = readonly ? '' : 'none';
+
+  // Nav buttons
+  const keys = getSortedKeys();
+  const idx = keys.indexOf(currentKey);
+  document.getElementById('prevMonthBtn').disabled = idx <= 0;
+  document.getElementById('nextMonthBtn').disabled = idx >= keys.length - 1;
+
+  // Header inputs readonly
+  document.getElementById('tcInput').disabled = readonly;
+  document.getElementById('matiSplitInput').disabled = readonly;
+  document.getElementById('pinaSplitInput').disabled = readonly;
+
+  // Add row button
+  document.getElementById('addRowBtnWrap').style.display = readonly ? 'none' : '';
+
+  renderTable(month, readonly);
+  renderTotals(month);
+  renderPrintHeader(month);
+}
+
+function renderTable(month, readonly) {
+  const tbody = document.getElementById('expenseTbody');
+  tbody.innerHTML = '';
+
+  if (!month.items.length) {
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td colspan="7"><div class="empty-state">Sin gastos aún.<br><p>Hacé clic en "+ Agregar gasto" para empezar.</p></div></td>`;
+    tbody.appendChild(tr);
+    return;
+  }
+
+  for (const item of month.items) {
+    if (editingItemId === item.id && !readonly) {
+      tbody.appendChild(buildEditRow(item, month));
+    } else {
+      tbody.appendChild(buildViewRow(item, month, readonly));
+    }
+  }
+}
+
+function buildViewRow(item, month, readonly) {
+  const { mati, pina, matiPct, pinaPct } = calcShares(item, month);
+  const hasOverride = !!item.splitOverride;
+  const splitLabel = hasOverride
+    ? `<span class="split-override-label">${matiPct}% / ${pinaPct}%</span>`
+    : `<span class="split-label">Global (${matiPct}% / ${pinaPct}%)</span>`;
+
+  const tr = document.createElement('tr');
+  tr.innerHTML = `
+    <td>${escHtml(item.name)}</td>
+    <td><span class="badge-${item.currency.toLowerCase()}">${item.currency}</span></td>
+    <td class="amount">${fmtAmount(parseFloat(item.amount)||0, item.currency)}</td>
+    <td>${splitLabel}</td>
+    <td class="share">${fmtAmount(mati, item.currency)}</td>
+    <td class="share">${fmtAmount(pina, item.currency)}</td>
+    <td>
+      <div class="actions-cell">
+        ${!readonly ? `<button class="btn btn-sm" onclick="startEdit('${item.id}')">✏️ Editar</button>
+        <button class="btn btn-sm btn-danger" onclick="deleteItem('${item.id}')">✕</button>` : '—'}
+      </div>
+    </td>`;
+  return tr;
+}
+
+function buildEditRow(item, month) {
+  const hasOverride = !!item.splitOverride;
+  const matiOvr = hasOverride ? item.splitOverride.mati : month.matiSplit;
+  const pinaOvr = hasOverride ? item.splitOverride.pina : month.pinaSplit;
+
+  const tr = document.createElement('tr');
+  tr.className = 'edit-row';
+  tr.innerHTML = `
+    <td><input type="text" id="eName" value="${escAttr(item.name)}" placeholder="Concepto"></td>
+    <td>
+      <select id="eCurrency">
+        <option value="ARS"${item.currency==='ARS'?' selected':''}>ARS</option>
+        <option value="USD"${item.currency==='USD'?' selected':''}>USD</option>
+      </select>
+    </td>
+    <td><input type="number" id="eAmount" value="${item.amount||''}" placeholder="0" min="0" step="0.01"></td>
+    <td colspan="3">
+      <div class="split-override-row">
+        <label>
+          <input type="checkbox" id="eOverrideCheck" ${hasOverride?'checked':''} onchange="toggleOverrideInputs()">
+          Personalizar split
+        </label>
+        <div class="split-override-inputs" id="overrideInputs" style="display:${hasOverride?'flex':'none'}">
+          <span style="font-size:12px;color:var(--text-muted)">Mati</span>
+          <input type="number" id="eMati" value="${matiOvr}" min="0" max="100" step="1" oninput="syncSplitInputs('mati')">
+          <span style="font-size:12px">%</span>
+          <span style="font-size:12px;color:var(--text-muted)">Pina</span>
+          <input type="number" id="ePina" value="${pinaOvr}" min="0" max="100" step="1" oninput="syncSplitInputs('pina')">
+          <span style="font-size:12px">%</span>
+          <span class="split-sum-hint" id="splitSumHint"></span>
+        </div>
+      </div>
+    </td>
+    <td>
+      <div class="actions-cell">
+        <button class="btn btn-sm btn-primary" onclick="saveEdit('${item.id}')">✓ Guardar</button>
+        <button class="btn btn-sm" onclick="cancelEdit()">✕</button>
+      </div>
+    </td>`;
+  return tr;
+}
+
+function toggleOverrideInputs() {
+  const checked = document.getElementById('eOverrideCheck').checked;
+  document.getElementById('overrideInputs').style.display = checked ? 'flex' : 'none';
+  updateSplitHint();
+}
+
+function syncSplitInputs(changed) {
+  const matiEl = document.getElementById('eMati');
+  const pinaEl = document.getElementById('ePina');
+  let m = parseFloat(matiEl.value) || 0;
+  let p = parseFloat(pinaEl.value) || 0;
+  if (changed === 'mati') {
+    m = clamp(m, 0, 100);
+    pinaEl.value = Math.max(0, 100 - m);
+  } else {
+    p = clamp(p, 0, 100);
+    matiEl.value = Math.max(0, 100 - p);
+  }
+  updateSplitHint();
+}
+
+function updateSplitHint() {
+  const hint = document.getElementById('splitSumHint');
+  if (!hint) return;
+  const m = parseFloat(document.getElementById('eMati').value) || 0;
+  const p = parseFloat(document.getElementById('ePina').value) || 0;
+  const sum = m + p;
+  if (Math.abs(sum - 100) > 0.01) {
+    hint.textContent = `⚠ Suma: ${sum}%`;
+    hint.className = 'split-sum-hint error';
+  } else {
+    hint.textContent = '✓ 100%';
+    hint.className = 'split-sum-hint';
+  }
+}
+
+function renderTotals(month) {
+  const t = calcTotals(month);
+  document.getElementById('totalARS').textContent = fmtARS(t.totalARS);
+  document.getElementById('matiARS').textContent  = fmtARS(t.matiARS);
+  document.getElementById('pinaARS').textContent  = fmtARS(t.pinaARS);
+  document.getElementById('totalUSD').textContent = fmtUSD(t.totalUSD);
+  document.getElementById('matiUSD').textContent  = fmtUSD(t.matiUSD);
+  document.getElementById('pinaUSD').textContent  = fmtUSD(t.pinaUSD);
+
+  const parts = [];
+  if (t.pinaARS > 0.001) parts.push(fmtARS(t.pinaARS));
+  if (t.pinaUSD > 0.001) parts.push(fmtUSD(t.pinaUSD));
+  document.getElementById('pinaOwes').textContent = parts.length ? parts.join(' + ') : '$0,00';
+}
+
+function renderPrintHeader(month) {
+  const el = document.getElementById('printHeader');
+  el.innerHTML = `<h2 style="margin-bottom:4px">Casa Pi — ${keyToLabel(month.key)}</h2>
+    <p style="color:#666;font-size:13px">TC MEP: ${month.tc ? fmtARS(month.tc) : '—'} &nbsp;|&nbsp; Split: Mati ${month.matiSplit}% / Pina ${month.pinaSplit}%</p>`;
+
+  // Fill print expense table
+  const ptbody = document.getElementById('printTbody');
+  ptbody.innerHTML = '';
+  for (const item of month.items) {
+    const { mati, pina, matiPct, pinaPct } = calcShares(item, month);
+    const amt = parseFloat(item.amount) || 0;
+    const tr = document.createElement('tr');
+    tr.innerHTML = `<td>${escHtml(item.name)}</td><td>${item.currency}</td>
+      <td>${fmtAmount(amt, item.currency)}</td>
+      <td>${item.splitOverride ? `${matiPct}%/${pinaPct}%` : 'Global'}</td>
+      <td>${fmtAmount(mati, item.currency)}</td>
+      <td>${fmtAmount(pina, item.currency)}</td>`;
+    ptbody.appendChild(tr);
+  }
+}
+
+// ─── ACTIONS ──────────────────────────────────────────────────────────────────
+function startEdit(id) {
+  editingItemId = id;
+  renderAll();
+  // Focus first input
+  setTimeout(() => {
+    const el = document.getElementById('eName');
+    if (el) el.focus();
+  }, 50);
+}
+
+function cancelEdit() {
+  editingItemId = null;
+  renderAll();
+}
+
+function saveEdit(id) {
+  const month = getMonth();
+  if (!month) return;
+
+  const name     = (document.getElementById('eName')?.value || '').trim();
+  const currency = document.getElementById('eCurrency')?.value || 'ARS';
+  const amount   = parseFloat(document.getElementById('eAmount')?.value) || 0;
+  const override = document.getElementById('eOverrideCheck')?.checked;
+
+  let splitOverride = null;
+  if (override) {
+    const m = parseFloat(document.getElementById('eMati')?.value) || 0;
+    const p = parseFloat(document.getElementById('ePina')?.value) || 0;
+    if (Math.abs(m + p - 100) > 0.01) {
+      showNotif('⚠ El split debe sumar 100%');
+      return;
+    }
+    splitOverride = { mati: m, pina: p };
+  }
+
+  const item = month.items.find(i => i.id === id);
+  if (item) {
+    item.name = name || item.name;
+    item.currency = currency;
+    item.amount = amount;
+    item.splitOverride = splitOverride;
+  }
+
+  editingItemId = null;
+  saveAll();
+  renderAll();
+}
+
+function deleteItem(id) {
+  const month = getMonth();
+  if (!month) return;
+  month.items = month.items.filter(i => i.id !== id);
+  if (editingItemId === id) editingItemId = null;
+  saveAll();
+  renderAll();
+}
+
+function addNewItem() {
+  const month = getMonth();
+  if (!month) return;
+  const newItem = {
+    id: uid(),
+    name: '',
+    currency: 'ARS',
+    amount: 0,
+    splitOverride: null,
+    isRecurring: false,
+  };
+  month.items.push(newItem);
+  editingItemId = newItem.id;
+  saveAll();
+  renderAll();
+  // Scroll to new row
+  setTimeout(() => {
+    const tbody = document.getElementById('expenseTbody');
+    const lastRow = tbody.lastElementChild;
+    if (lastRow) lastRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }, 100);
+}
+
+function createNewMonth() {
+  const key = todayKey();
+  if (allMonths[key]) {
+    currentKey = key;
+    editingItemId = null;
+    renderAll();
+    showNotif('Ya existe el mes actual');
+    return;
+  }
+  allMonths[key] = createMonthRecord(key);
+  currentKey = key;
+  editingItemId = null;
+  saveAll();
+  renderAll();
+  showNotif(`Nuevo mes creado: ${keyToLabel(key)}`);
+}
+
+function navigateMonth(delta) {
+  const keys = getSortedKeys();
+  const idx = keys.indexOf(currentKey);
+  const newIdx = idx + delta;
+  if (newIdx < 0 || newIdx >= keys.length) return;
+  editingItemId = null;
+  currentKey = keys[newIdx];
+  renderAll();
+}
+
+// ─── HEADER INPUTS ────────────────────────────────────────────────────────────
+document.getElementById('tcInput').addEventListener('change', function() {
+  const month = getMonth();
+  if (!month || isReadonly()) return;
+  month.tc = parseFloat(this.value) || 0;
+  saveAll();
+  renderAll();
+});
+
+document.getElementById('matiSplitInput').addEventListener('change', function() {
+  const month = getMonth();
+  if (!month || isReadonly()) return;
+  let m = clamp(parseFloat(this.value)||0, 0, 100);
+  month.matiSplit = m;
+  month.pinaSplit = 100 - m;
+  document.getElementById('pinaSplitInput').value = month.pinaSplit;
+  saveAll();
+  renderAll();
+});
+
+document.getElementById('pinaSplitInput').addEventListener('change', function() {
+  const month = getMonth();
+  if (!month || isReadonly()) return;
+  let p = clamp(parseFloat(this.value)||0, 0, 100);
+  month.pinaSplit = p;
+  month.matiSplit = 100 - p;
+  document.getElementById('matiSplitInput').value = month.matiSplit;
+  saveAll();
+  renderAll();
+});
+
+document.getElementById('prevMonthBtn').addEventListener('click', () => navigateMonth(-1));
+document.getElementById('nextMonthBtn').addEventListener('click', () => navigateMonth(1));
+
+// ─── MODAL ────────────────────────────────────────────────────────────────────
+function openModal() {
+  const list = document.getElementById('monthList');
+  list.innerHTML = '';
+  const keys = getSortedKeys().reverse();
+
+  if (!keys.length) {
+    list.innerHTML = '<li style="color:var(--text-muted);font-size:13px">Sin meses guardados.</li>';
+  }
+
+  for (const k of keys) {
+    const li = document.createElement('li');
+    li.className = k === currentKey ? 'active' : '';
+    li.innerHTML = `
+      <span>${keyToLabel(k)}</span>
+      <div class="month-list-actions">
+        <button class="btn btn-sm" onclick="goToMonth('${k}')">Ver</button>
+        ${k !== todayKey() ? `<button class="btn btn-sm btn-danger" onclick="deleteMonth('${k}')">Borrar</button>` : ''}
+      </div>`;
+    list.appendChild(li);
+  }
+
+  document.getElementById('modalOverlay').classList.add('open');
+}
+
+function closeModal() {
+  document.getElementById('modalOverlay').classList.remove('open');
+}
+
+document.getElementById('modalOverlay').addEventListener('click', function(e) {
+  if (e.target === this) closeModal();
+});
+
+function goToMonth(key) {
+  currentKey = key;
+  editingItemId = null;
+  closeModal();
+  renderAll();
+}
+
+function deleteMonth(key) {
+  if (!confirm(`¿Borrar el registro de ${keyToLabel(key)}? Esta acción no se puede deshacer.`)) return;
+  delete allMonths[key];
+  saveAll();
+  // Navigate to latest remaining month
+  const keys = getSortedKeys();
+  if (keys.length) {
+    currentKey = keys[keys.length - 1];
+  } else {
+    currentKey = ensureCurrentMonth();
+  }
+  closeModal();
+  renderAll();
+  showNotif('Mes borrado');
+}
+
+// ─── EXPORT ───────────────────────────────────────────────────────────────────
+function buildTextSummary() {
+  const month = getMonth();
+  if (!month) return '';
+  const t = calcTotals(month);
+  const lines = [];
+
+  lines.push(`Casa Pi — ${keyToLabel(month.key)}`);
+  if (month.tc) lines.push(`TC MEP: ${fmtARS(month.tc)}`);
+  lines.push('');
+  lines.push('GASTOS:');
+
+  for (const item of month.items) {
+    const amt = parseFloat(item.amount) || 0;
+    if (!amt) continue;
+    const { pina } = calcShares(item, month);
+    const cur = item.currency;
+    const amtStr = cur === 'USD' ? fmtUSD(amt) : fmtARS(amt);
+    const pinaStr = cur === 'USD' ? fmtUSD(pina) : fmtARS(pina);
+    lines.push(`• ${item.name}: ${amtStr} → Pina: ${pinaStr}`);
+  }
+
+  lines.push('');
+  lines.push(`TOTAL PESOS: ${fmtARS(t.totalARS)} | Pina: ${fmtARS(t.pinaARS)}`);
+  lines.push(`TOTAL USD: ${fmtUSD(t.totalUSD)} | Pina: ${fmtUSD(t.pinaUSD)}`);
+  lines.push('');
+
+  const parts = [];
+  if (t.pinaARS > 0.001) parts.push(fmtARS(t.pinaARS));
+  if (t.pinaUSD > 0.001) parts.push(fmtUSD(t.pinaUSD));
+  lines.push(`Pina te debe: ${parts.join(' + ') || '$0,00'}`);
+
+  return lines.join('\n');
+}
+
+function copyText() {
+  const text = buildTextSummary();
+  navigator.clipboard.writeText(text).then(() => {
+    showNotif('✓ Texto copiado al portapapeles');
+  }).catch(() => {
+    // Fallback
+    const ta = document.createElement('textarea');
+    ta.value = text;
+    document.body.appendChild(ta);
+    ta.select();
+    document.execCommand('copy');
+    document.body.removeChild(ta);
+    showNotif('✓ Texto copiado');
+  });
+}
+
+function downloadPDF() {
+  window.print();
+}
+
+function saveImage() {
+  const card = document.getElementById('totalsCard');
+  if (!window.html2canvas) {
+    showNotif('⚠ html2canvas no disponible (requiere conexión)');
+    return;
+  }
+  showNotif('Generando imagen...');
+  html2canvas(card, { backgroundColor: '#ffffff', scale: 2 }).then(canvas => {
+    const link = document.createElement('a');
+    link.download = `casapi-${currentKey}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    showNotif('✓ Imagen descargada');
+  }).catch(() => showNotif('⚠ Error al generar imagen'));
+}
+
+// ─── ESCAPE HELPERS ───────────────────────────────────────────────────────────
+function escHtml(str) {
+  return String(str)
+    .replace(/&/g,'&amp;')
+    .replace(/</g,'&lt;')
+    .replace(/>/g,'&gt;')
+    .replace(/"/g,'&quot;');
+}
+
+function escAttr(str) {
+  return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;');
+}
+
+// ─── INIT ─────────────────────────────────────────────────────────────────────
+(function init() {
+  loadAll();
+  currentKey = ensureCurrentMonth();
+  renderAll();
+})();
+</script>
+</body>
+</html>
