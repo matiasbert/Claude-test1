@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "savedAt": "2026-05-04T02:58:47.215Z",
+  "savedAt": "2026-05-04T03:10:18.819Z",
   "months": {
     "2026-05": {
       "key": "2026-05",
@@ -74,7 +74,7 @@
             "pina": 100
           },
           "isRecurring": false,
-          "notes": "primevideo x2, thelonious 1/2, bebop 50%",
+          "notes": "",
           "installments": null
         },
         {
