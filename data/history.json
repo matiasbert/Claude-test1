@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "savedAt": "2026-05-02T05:28:42.291Z",
+  "savedAt": "2026-05-04T02:58:47.215Z",
   "months": {
     "2026-05": {
       "key": "2026-05",
@@ -27,25 +27,76 @@
           "id": "9f1vr1p1monvwwjb",
           "name": "Telecentro",
           "currency": "ARS",
-          "amount": 0,
+          "amount": 118000,
           "splitOverride": null,
           "isRecurring": true
         },
         {
           "id": "sjerdfadmonvwwjb",
-          "name": "Luz / EDESUR",
+          "name": "Edesur",
           "currency": "ARS",
-          "amount": 0,
+          "amount": 17300,
           "splitOverride": null,
-          "isRecurring": true
+          "isRecurring": true,
+          "notes": "",
+          "installments": null
         },
         {
           "id": "qnt991scmonvwwjb",
-          "name": "Gas / METROGAS",
+          "name": "Metrogas",
           "currency": "ARS",
-          "amount": 0,
+          "amount": 6100,
           "splitOverride": null,
-          "isRecurring": true
+          "isRecurring": true,
+          "notes": "",
+          "installments": null
+        },
+        {
+          "id": "cwe4km1vmoqiyf8i",
+          "name": "Master Pina",
+          "currency": "ARS",
+          "amount": 62000,
+          "splitOverride": {
+            "mati": 0,
+            "pina": 100
+          },
+          "isRecurring": false,
+          "notes": "nafta viaje",
+          "installments": null
+        },
+        {
+          "id": "4f4u01u5moqizeer",
+          "name": "Visa Pina",
+          "currency": "ARS",
+          "amount": 80000,
+          "splitOverride": {
+            "mati": 0,
+            "pina": 100
+          },
+          "isRecurring": false,
+          "notes": "primevideo x2, thelonious 1/2, bebop 50%",
+          "installments": null
+        },
+        {
+          "id": "t50rz3eymoqj0u9e",
+          "name": "COTO",
+          "currency": "ARS",
+          "amount": 129000,
+          "splitOverride": null,
+          "isRecurring": false
+        },
+        {
+          "id": "wxlgvgsimoqj1dir",
+          "name": "Colchon",
+          "currency": "ARS",
+          "amount": 341666,
+          "splitOverride": null,
+          "isRecurring": false,
+          "notes": "",
+          "installments": {
+            "current": 1,
+            "total": 12
+          }
         }
       ]
     }
