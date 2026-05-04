@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Casa Pipi's — Gastos del hogar</title>
+<title>Casa Pipi's — Gastos de casita</title>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -24,6 +24,23 @@
   --shadow-lg: 0 4px 16px rgba(0,0,0,0.12), 0 2px 4px rgba(0,0,0,0.08);
 }
 
+body.dark {
+  --bg: #0f172a;
+  --surface: #1e293b;
+  --border: #334155;
+  --text: #e2e8f0;
+  --text-muted: #94a3b8;
+  --accent: #14b8a6;
+  --accent-dark: #0d9488;
+  --accent-light: #042f2e;
+  --danger: #f87171;
+  --danger-light: #7f1d1d;
+  --row-alt: #162032;
+  --shadow: 0 2px 8px rgba(0,0,0,0.5), 0 1px 2px rgba(0,0,0,0.4);
+  --shadow-lg: 0 4px 16px rgba(0,0,0,0.6), 0 2px 4px rgba(0,0,0,0.5);
+  color-scheme: dark;
+}
+
 body {
   font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   background: var(--bg);
@@ -33,7 +50,6 @@ body {
   min-height: 100vh;
 }
 
-/* HEADER */
 .app-header {
   background: var(--surface);
   border-bottom: 1px solid var(--border);
@@ -43,699 +59,162 @@ body {
   z-index: 100;
   box-shadow: var(--shadow);
 }
-
-.header-top {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  gap: 12px;
-  flex-wrap: wrap;
-}
-
-.app-title {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--accent);
-  letter-spacing: -0.3px;
-}
-
-.app-subtitle {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-top: 1px;
-}
-
-.header-meta {
-  display: flex;
-  gap: 16px;
-  align-items: center;
-  flex-wrap: wrap;
-  margin-top: 12px;
-}
-
-.meta-field {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  font-size: 13px;
-}
-
-.meta-field label {
-  color: var(--text-muted);
-  white-space: nowrap;
-  font-weight: 500;
-}
-
-.meta-input {
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 4px 8px;
-  font-size: 13px;
-  width: 90px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: inherit;
-}
-
+.header-top { display: flex; align-items: center; justify-content: space-between; gap: 12px; flex-wrap: wrap; }
+.app-title { font-size: 20px; font-weight: 700; color: var(--accent); letter-spacing: -0.3px; }
+.app-subtitle { font-size: 13px; color: var(--text-muted); margin-top: 1px; }
+.header-meta { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; margin-top: 12px; }
+.meta-field { display: flex; align-items: center; gap: 6px; font-size: 13px; }
+.meta-field label { color: var(--text-muted); white-space: nowrap; font-weight: 500; }
+.meta-input { border: 1px solid var(--border); border-radius: 6px; padding: 4px 8px; font-size: 13px; width: 90px; background: var(--bg); color: var(--text); font-family: inherit; }
 .meta-input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
-
-.split-inputs {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
+.split-inputs { display: flex; align-items: center; gap: 4px; }
 .split-inputs .meta-input { width: 56px; }
 .split-sep { color: var(--text-muted); font-weight: 500; }
 
-/* MONTH NAV */
-.month-nav {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 12px 20px;
-  background: var(--surface);
-  border-bottom: 1px solid var(--border);
-  gap: 12px;
-}
+.month-nav { display: flex; align-items: center; justify-content: space-between; padding: 12px 20px; background: var(--surface); border-bottom: 1px solid var(--border); gap: 8px; flex-wrap: wrap; }
+.month-label { font-size: 18px; font-weight: 700; color: var(--text); text-align: center; }
+.readonly-badge { font-size: 11px; background: #fef3c7; color: #92400e; border: 1px solid #fde68a; border-radius: 12px; padding: 2px 8px; font-weight: 600; }
+.locked-badge { font-size: 11px; background: #ede9fe; color: #5b21b6; border: 1px solid #c4b5fd; border-radius: 12px; padding: 2px 8px; font-weight: 600; }
+body.dark .readonly-badge { background: #713f12; color: #fde68a; border-color: #92400e; }
+body.dark .locked-badge   { background: #2e1065; color: #c4b5fd; border-color: #5b21b6; }
 
-.month-label {
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text);
-  text-align: center;
-  flex: 1;
-}
-
-.readonly-badge {
-  font-size: 11px;
-  background: #fef3c7;
-  color: #92400e;
-  border: 1px solid #fde68a;
-  border-radius: 12px;
-  padding: 2px 8px;
-  font-weight: 600;
-  margin-left: 8px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 6px;
-  padding: 7px 14px;
-  border-radius: 7px;
-  border: 1px solid var(--border);
-  background: var(--surface);
-  color: var(--text);
-  font-size: 13px;
-  font-weight: 500;
-  cursor: pointer;
-  font-family: inherit;
-  white-space: nowrap;
-  transition: none;
-}
-
+.btn { display: inline-flex; align-items: center; gap: 6px; padding: 7px 14px; border-radius: 7px; border: 1px solid var(--border); background: var(--surface); color: var(--text); font-size: 13px; font-weight: 500; cursor: pointer; font-family: inherit; white-space: nowrap; transition: none; }
 .btn:hover { background: var(--bg); }
 .btn:active { opacity: 0.8; }
-
-.btn-primary {
-  background: var(--accent);
-  color: #fff;
-  border-color: var(--accent-dark);
-}
-
+.btn-primary { background: var(--accent); color: #fff; border-color: var(--accent-dark); }
 .btn-primary:hover { background: var(--accent-dark); }
-
-.btn-danger {
-  background: var(--danger-light);
-  color: var(--danger);
-  border-color: #fca5a5;
-}
-
+.btn-danger { background: var(--danger-light); color: var(--danger); border-color: #fca5a5; }
 .btn-danger:hover { background: #fecaca; }
+body.dark .btn-danger:hover { background: #991b1b; }
+.btn-wa { background: #25d366; color: #fff; border-color: #128c7e; }
+.btn-wa:hover { background: #20b858; }
+.btn-icon { padding: 6px 10px; font-size: 16px; }
+.btn-sm { padding: 4px 10px; font-size: 12px; }
 
-.btn-icon {
-  padding: 6px 10px;
-  font-size: 16px;
-}
+.main { max-width: 1100px; margin: 0 auto; padding: 20px; }
 
-.btn-sm {
-  padding: 4px 10px;
-  font-size: 12px;
-}
-
-/* MAIN CONTENT */
-.main {
-  max-width: 1100px;
-  margin: 0 auto;
-  padding: 20px;
-}
-
-/* TABLE */
-.table-wrap {
-  background: var(--surface);
-  border-radius: 10px;
-  border: 1px solid var(--border);
-  box-shadow: var(--shadow);
-  overflow: hidden;
-  margin-bottom: 20px;
-}
-
-.table-header {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 14px 16px;
-  border-bottom: 1px solid var(--border);
-  background: var(--row-alt);
-}
-
-.table-title {
-  font-weight: 700;
-  font-size: 15px;
-}
-
-.table-scroll {
-  overflow-x: auto;
-  -webkit-overflow-scrolling: touch;
-}
-
-table {
-  width: 100%;
-  border-collapse: collapse;
-  min-width: 700px;
-}
-
-thead th {
-  padding: 10px 12px;
-  text-align: left;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  background: var(--row-alt);
-  border-bottom: 1px solid var(--border);
-  white-space: nowrap;
-}
-
+.table-wrap { background: var(--surface); border-radius: 10px; border: 1px solid var(--border); box-shadow: var(--shadow); overflow: hidden; margin-bottom: 20px; }
+.table-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid var(--border); background: var(--row-alt); }
+.table-title { font-weight: 700; font-size: 15px; }
+.table-scroll { overflow-x: auto; -webkit-overflow-scrolling: touch; }
+table { width: 100%; border-collapse: collapse; min-width: 700px; }
+thead th { padding: 10px 12px; text-align: left; font-size: 12px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px; background: var(--row-alt); border-bottom: 1px solid var(--border); white-space: nowrap; }
 tbody tr:nth-child(even) { background: var(--row-alt); }
 tbody tr:hover { background: var(--accent-light); }
-
-td {
-  padding: 10px 12px;
-  font-size: 14px;
-  border-bottom: 1px solid var(--border);
-  vertical-align: middle;
-}
-
+td { padding: 10px 12px; font-size: 14px; border-bottom: 1px solid var(--border); vertical-align: middle; }
 tbody tr:last-child td { border-bottom: none; }
+.badge-ars { display:inline-block; background:#dbeafe; color:#1e40af; border-radius:4px; padding:2px 7px; font-size:11px; font-weight:700; }
+.badge-usd { display:inline-block; background:#dcfce7; color:#166534; border-radius:4px; padding:2px 7px; font-size:11px; font-weight:700; }
+body.dark .badge-ars { background:#1e3a5f; color:#93c5fd; }
+body.dark .badge-usd { background:#14532d; color:#86efac; }
+.split-label { font-size:12px; color:var(--text-muted); white-space:nowrap; }
+.split-override-label { font-size:12px; color:var(--accent); font-weight:600; white-space:nowrap; }
+td.amount { font-weight:600; font-variant-numeric:tabular-nums; }
+td.share  { font-variant-numeric:tabular-nums; }
+.actions-cell { white-space:nowrap; display:flex; gap:6px; align-items:center; }
+.item-notes { font-size:11px; color:var(--text-muted); margin-top:2px; font-style:italic; word-break:break-word; }
+.installment-badge { display:inline-block; background:#fef3c7; color:#92400e; border-radius:4px; padding:1px 5px; font-size:11px; font-weight:700; margin-left:4px; vertical-align:middle; }
+body.dark .installment-badge { background:#451a03; color:#fbbf24; }
+
+.edit-row td { background: var(--accent-light) !important; padding: 8px 10px; vertical-align: top; }
+.edit-row input, .edit-row select, .edit-row textarea { border: 1px solid var(--accent); border-radius: 5px; padding: 5px 8px; font-size: 13px; font-family: inherit; background: var(--surface); color: var(--text); width: 100%; }
+.edit-row input:focus, .edit-row select:focus, .edit-row textarea:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
+.edit-row textarea { resize: vertical; min-height: 30px; }
+.edit-row input[type="checkbox"] { width: auto; cursor: pointer; }
+.split-edit-row { display:flex; align-items:center; gap:6px; flex-wrap:wrap; }
+.split-edit-inputs { display:flex; align-items:center; gap:4px; }
+.split-edit-inputs input { width: 52px !important; }
+.split-sum-hint { font-size:11px; color:var(--text-muted); }
+.split-sum-hint.error { color:var(--danger); font-weight:600; }
+.install-row { display: flex; align-items: center; gap: 8px; flex-wrap: wrap; margin-top: 6px; font-size: 12px; color: var(--text-muted); }
+.install-row input[type="number"] { width: 48px !important; }
+.add-row-btn-wrap { padding:12px 16px; border-top:1px solid var(--border); background:var(--row-alt); }
+
+.totals-card { background:var(--surface); border:1px solid var(--border); border-radius:10px; box-shadow:var(--shadow-lg); padding:20px; margin-bottom:20px; }
+.totals-title { font-size:16px; font-weight:700; margin-bottom:16px; color:var(--text); }
+.totals-grid { display:grid; grid-template-columns:1fr 1fr; gap:12px; margin-bottom:16px; }
+@media (max-width:560px) { .totals-grid { grid-template-columns:1fr; } }
+.totals-block { background:var(--bg); border:1px solid var(--border); border-radius:8px; padding:14px; }
+.totals-block-title { font-size:12px; font-weight:600; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; margin-bottom:10px; }
+.totals-row { display:flex; justify-content:space-between; align-items:baseline; margin-bottom:6px; font-size:14px; }
+.totals-row:last-child { margin-bottom:0; }
+.totals-row .label { color:var(--text-muted); }
+.totals-row .value { font-weight:700; font-variant-numeric:tabular-nums; }
+.totals-row.highlight .value { color:var(--accent); font-size:16px; }
+.pina-owes { background:linear-gradient(135deg,var(--accent-light),#f0fdfa); border:2px solid var(--accent); border-radius:8px; padding:16px; text-align:center; }
+body.dark .pina-owes { background:linear-gradient(135deg,var(--accent-light),#0d2b29); }
+.pina-owes-label { font-size:13px; color:var(--text-muted); margin-bottom:6px; font-weight:500; }
+.pina-owes-amount { font-size:22px; font-weight:800; color:var(--accent-dark); font-variant-numeric:tabular-nums; }
+
+.export-section, .sync-section { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:16px 20px; box-shadow:var(--shadow); margin-bottom:20px; }
+.export-title { font-size:14px; font-weight:700; margin-bottom:12px; color:var(--text-muted); text-transform:uppercase; letter-spacing:0.5px; }
+.export-btns { display:flex; gap:10px; flex-wrap:wrap; }
+.sync-token-row { display:flex; align-items:center; gap:8px; flex-wrap:wrap; margin-bottom:10px; }
+.sync-label { font-size:13px; color:var(--text-muted); font-weight:500; white-space:nowrap; }
+.sync-token-input-wrap { display:flex; gap:6px; align-items:center; flex-wrap:wrap; }
+.sync-token-input-wrap input { border:1px solid var(--border); border-radius:6px; padding:5px 10px; font-size:13px; width:210px; background:var(--bg); color:var(--text); font-family:monospace; }
+.sync-token-input-wrap input:focus { outline:2px solid var(--accent); outline-offset:-1px; }
+.sync-status { font-size:12px; color:var(--text-muted); margin-bottom:10px; display:flex; align-items:center; gap:5px; }
+.sync-status.ok    { color:var(--accent-dark); }
+.sync-status.error { color:var(--danger); }
+.sync-status.busy  { color:#92400e; }
+body.dark .sync-status.busy { color:#fbbf24; }
+
+.empty-state { text-align:center; padding:40px 20px; color:var(--text-muted); }
+.empty-state p { margin-top:8px; font-size:13px; }
+
+.modal-overlay { display:none; position:fixed; inset:0; background:rgba(0,0,0,0.4); z-index:200; align-items:center; justify-content:center; }
+.modal-overlay.open { display:flex; }
+.modal { background:var(--surface); border-radius:12px; padding:24px; max-width:420px; width:90%; box-shadow:var(--shadow-lg); max-height:80vh; overflow-y:auto; }
+.modal-title { font-size:17px; font-weight:700; margin-bottom:16px; }
+.month-list { list-style:none; }
+.month-list li { display:flex; justify-content:space-between; align-items:center; padding:10px 12px; border-radius:7px; cursor:pointer; font-size:14px; border:1px solid transparent; }
+.month-list li:hover { background:var(--bg); border-color:var(--border); }
+.month-list li.active { background:var(--accent-light); border-color:var(--accent); font-weight:600; }
+.month-list-actions { display:flex; gap:6px; }
+.modal-close { float:right; background:none; border:none; font-size:20px; cursor:pointer; color:var(--text-muted); line-height:1; padding:2px 6px; border-radius:4px; }
+.modal-close:hover { background:var(--bg); }
+
+.notif { position:fixed; bottom:20px; left:50%; transform:translateX(-50%); background:#1e293b; color:#fff; padding:10px 20px; border-radius:8px; font-size:14px; font-weight:500; z-index:999; opacity:0; pointer-events:none; box-shadow:var(--shadow-lg); }
+.notif.show { opacity:1; }
+
+#imageSnapshot { position:fixed; left:-9999px; top:0; width:680px; background:#f8f6f2; padding:24px; font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,sans-serif; font-size:14px; color:#2c3440; }
+.snap-header { margin-bottom:16px; padding-bottom:12px; border-bottom:2px solid #0d9488; }
+.snap-title { font-size:20px; font-weight:800; color:#0d9488; }
+.snap-sub { font-size:13px; color:#6b7280; margin-top:2px; }
+.snap-table { width:100%; border-collapse:collapse; margin-bottom:16px; font-size:13px; }
+.snap-table th { background:#e2ddd6; padding:7px 10px; text-align:left; font-size:11px; font-weight:700; text-transform:uppercase; letter-spacing:0.4px; color:#6b7280; }
+.snap-table td { padding:7px 10px; border-bottom:1px solid #e2ddd6; vertical-align:middle; }
+.snap-table tr:nth-child(even) td { background:#faf9f7; }
+.snap-totals { display:flex; gap:12px; margin-bottom:14px; }
+.snap-block { flex:1; background:#ffffff; border:1px solid #e2ddd6; border-radius:8px; padding:12px; }
+.snap-block-title { font-size:11px; font-weight:700; color:#6b7280; text-transform:uppercase; letter-spacing:0.4px; margin-bottom:8px; }
+.snap-row { display:flex; justify-content:space-between; font-size:13px; margin-bottom:4px; }
+.snap-row .lbl { color:#6b7280; }
+.snap-row .val { font-weight:700; font-variant-numeric:tabular-nums; }
+.snap-row .val.hi { color:#0d9488; font-size:15px; }
+.snap-pina { background:linear-gradient(135deg,#ccfbf1,#f0fdfa); border:2px solid #0d9488; border-radius:8px; padding:14px; text-align:center; }
+.snap-pina-lbl { font-size:12px; color:#6b7280; margin-bottom:4px; font-weight:500; }
+.snap-pina-val { font-size:22px; font-weight:800; color:#0f766e; font-variant-numeric:tabular-nums; }
 
-.badge-ars {
-  display: inline-block;
-  background: #dbeafe;
-  color: #1e40af;
-  border-radius: 4px;
-  padding: 2px 7px;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.badge-usd {
-  display: inline-block;
-  background: #dcfce7;
-  color: #166534;
-  border-radius: 4px;
-  padding: 2px 7px;
-  font-size: 11px;
-  font-weight: 700;
-}
-
-.split-label {
-  font-size: 12px;
-  color: var(--text-muted);
-  white-space: nowrap;
-}
-
-.split-override-label {
-  font-size: 12px;
-  color: var(--accent);
-  font-weight: 600;
-  white-space: nowrap;
-}
-
-td.amount { font-weight: 600; font-variant-numeric: tabular-nums; }
-td.share  { font-variant-numeric: tabular-nums; }
-
-.actions-cell {
-  white-space: nowrap;
-  display: flex;
-  gap: 6px;
-  align-items: center;
-}
-
-/* INLINE EDIT ROW */
-.edit-row td {
-  background: var(--accent-light) !important;
-  padding: 8px 10px;
-  vertical-align: top;
-}
-
-.edit-row input, .edit-row select {
-  border: 1px solid var(--accent);
-  border-radius: 5px;
-  padding: 5px 8px;
-  font-size: 13px;
-  font-family: inherit;
-  background: var(--surface);
-  color: var(--text);
-  width: 100%;
-}
-
-.edit-row input:focus, .edit-row select:focus {
-  outline: 2px solid var(--accent);
-  outline-offset: -1px;
-}
-
-.split-edit-row {
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  flex-wrap: wrap;
-}
-
-.split-edit-inputs {
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.split-edit-inputs input {
-  width: 52px !important;
-}
-
-.split-sum-hint {
-  font-size: 11px;
-  color: var(--text-muted);
-}
-
-.split-sum-hint.error { color: var(--danger); font-weight: 600; }
-
-/* ADD ROW */
-.add-row-btn-wrap {
-  padding: 12px 16px;
-  border-top: 1px solid var(--border);
-  background: var(--row-alt);
-}
-
-/* TOTALS */
-.totals-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  box-shadow: var(--shadow-lg);
-  padding: 20px;
-  margin-bottom: 20px;
-}
-
-.totals-title {
-  font-size: 16px;
-  font-weight: 700;
-  margin-bottom: 16px;
-  color: var(--text);
-}
-
-.totals-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 12px;
-  margin-bottom: 16px;
-}
-
-@media (max-width: 560px) {
-  .totals-grid { grid-template-columns: 1fr; }
-}
-
-.totals-block {
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  padding: 14px;
-}
-
-.totals-block-title {
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-  margin-bottom: 10px;
-}
-
-.totals-row {
-  display: flex;
-  justify-content: space-between;
-  align-items: baseline;
-  margin-bottom: 6px;
-  font-size: 14px;
-}
-
-.totals-row:last-child { margin-bottom: 0; }
-.totals-row .label { color: var(--text-muted); }
-
-.totals-row .value {
-  font-weight: 700;
-  font-variant-numeric: tabular-nums;
-}
-
-.totals-row.highlight .value { color: var(--accent); font-size: 16px; }
-
-.pina-owes {
-  background: linear-gradient(135deg, var(--accent-light), #f0fdfa);
-  border: 2px solid var(--accent);
-  border-radius: 8px;
-  padding: 16px;
-  text-align: center;
-}
-
-.pina-owes-label {
-  font-size: 13px;
-  color: var(--text-muted);
-  margin-bottom: 6px;
-  font-weight: 500;
-}
-
-.pina-owes-amount {
-  font-size: 22px;
-  font-weight: 800;
-  color: var(--accent-dark);
-  font-variant-numeric: tabular-nums;
-}
-
-/* EXPORT */
-.export-section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px 20px;
-  box-shadow: var(--shadow);
-  margin-bottom: 20px;
-}
-
-.export-title {
-  font-size: 14px;
-  font-weight: 700;
-  margin-bottom: 12px;
-  color: var(--text-muted);
-  text-transform: uppercase;
-  letter-spacing: 0.5px;
-}
-
-.export-btns {
-  display: flex;
-  gap: 10px;
-  flex-wrap: wrap;
-}
-
-/* GITHUB SYNC */
-.sync-section {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: 10px;
-  padding: 16px 20px;
-  box-shadow: var(--shadow);
-  margin-bottom: 20px;
-}
-
-.sync-token-row {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  flex-wrap: wrap;
-  margin-bottom: 10px;
-}
-
-.sync-label {
-  font-size: 13px;
-  color: var(--text-muted);
-  font-weight: 500;
-  white-space: nowrap;
-}
-
-.sync-token-input-wrap {
-  display: flex;
-  gap: 6px;
-  align-items: center;
-  flex-wrap: wrap;
-}
-
-.sync-token-input-wrap input {
-  border: 1px solid var(--border);
-  border-radius: 6px;
-  padding: 5px 10px;
-  font-size: 13px;
-  width: 210px;
-  background: var(--bg);
-  color: var(--text);
-  font-family: monospace;
-}
-
-.sync-token-input-wrap input:focus { outline: 2px solid var(--accent); outline-offset: -1px; }
-
-.sync-status {
-  font-size: 12px;
-  color: var(--text-muted);
-  margin-bottom: 10px;
-  display: flex;
-  align-items: center;
-  gap: 5px;
-}
-
-.sync-status.ok    { color: var(--accent-dark); }
-.sync-status.error { color: var(--danger); }
-.sync-status.busy  { color: #92400e; }
-
-/* EMPTY STATE */
-.empty-state {
-  text-align: center;
-  padding: 40px 20px;
-  color: var(--text-muted);
-}
-
-.empty-state p { margin-top: 8px; font-size: 13px; }
-
-/* MONTH HISTORY MODAL */
-.modal-overlay {
-  display: none;
-  position: fixed;
-  inset: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 200;
-  align-items: center;
-  justify-content: center;
-}
-
-.modal-overlay.open { display: flex; }
-
-.modal {
-  background: var(--surface);
-  border-radius: 12px;
-  padding: 24px;
-  max-width: 420px;
-  width: 90%;
-  box-shadow: var(--shadow-lg);
-  max-height: 80vh;
-  overflow-y: auto;
-}
-
-.modal-title {
-  font-size: 17px;
-  font-weight: 700;
-  margin-bottom: 16px;
-}
-
-.month-list { list-style: none; }
-
-.month-list li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 10px 12px;
-  border-radius: 7px;
-  cursor: pointer;
-  font-size: 14px;
-  border: 1px solid transparent;
-}
-
-.month-list li:hover { background: var(--bg); border-color: var(--border); }
-.month-list li.active { background: var(--accent-light); border-color: var(--accent); font-weight: 600; }
-
-.month-list-actions { display: flex; gap: 6px; }
-
-.modal-close {
-  float: right;
-  background: none;
-  border: none;
-  font-size: 20px;
-  cursor: pointer;
-  color: var(--text-muted);
-  line-height: 1;
-  padding: 2px 6px;
-  border-radius: 4px;
-}
-
-.modal-close:hover { background: var(--bg); }
-
-/* NOTIFICATION */
-.notif {
-  position: fixed;
-  bottom: 20px;
-  left: 50%;
-  transform: translateX(-50%);
-  background: #1e293b;
-  color: #fff;
-  padding: 10px 20px;
-  border-radius: 8px;
-  font-size: 14px;
-  font-weight: 500;
-  z-index: 999;
-  opacity: 0;
-  pointer-events: none;
-  box-shadow: var(--shadow-lg);
-}
-
-.notif.show { opacity: 1; }
-
-/* IMAGE SNAPSHOT (off-screen, captured by html2canvas) */
-#imageSnapshot {
-  position: fixed;
-  left: -9999px;
-  top: 0;
-  width: 680px;
-  background: #f8f6f2;
-  padding: 24px;
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-  font-size: 14px;
-  color: #2c3440;
-}
-
-.snap-header {
-  margin-bottom: 16px;
-  padding-bottom: 12px;
-  border-bottom: 2px solid #0d9488;
-}
-
-.snap-title {
-  font-size: 20px;
-  font-weight: 800;
-  color: #0d9488;
-}
-
-.snap-sub {
-  font-size: 13px;
-  color: #6b7280;
-  margin-top: 2px;
-}
-
-.snap-table {
-  width: 100%;
-  border-collapse: collapse;
-  margin-bottom: 16px;
-  font-size: 13px;
-}
-
-.snap-table th {
-  background: #e2ddd6;
-  padding: 7px 10px;
-  text-align: left;
-  font-size: 11px;
-  font-weight: 700;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  color: #6b7280;
-}
-
-.snap-table td {
-  padding: 7px 10px;
-  border-bottom: 1px solid #e2ddd6;
-  vertical-align: middle;
-}
-
-.snap-table tr:nth-child(even) td { background: #faf9f7; }
-
-.snap-totals {
-  display: flex;
-  gap: 12px;
-  margin-bottom: 14px;
-}
-
-.snap-block {
-  flex: 1;
-  background: #ffffff;
-  border: 1px solid #e2ddd6;
-  border-radius: 8px;
-  padding: 12px;
-}
-
-.snap-block-title {
-  font-size: 11px;
-  font-weight: 700;
-  color: #6b7280;
-  text-transform: uppercase;
-  letter-spacing: 0.4px;
-  margin-bottom: 8px;
-}
-
-.snap-row {
-  display: flex;
-  justify-content: space-between;
-  font-size: 13px;
-  margin-bottom: 4px;
-}
-
-.snap-row .lbl { color: #6b7280; }
-.snap-row .val { font-weight: 700; font-variant-numeric: tabular-nums; }
-.snap-row .val.hi { color: #0d9488; font-size: 15px; }
-
-.snap-pina {
-  background: linear-gradient(135deg, #ccfbf1, #f0fdfa);
-  border: 2px solid #0d9488;
-  border-radius: 8px;
-  padding: 14px;
-  text-align: center;
-}
-
-.snap-pina-lbl { font-size: 12px; color: #6b7280; margin-bottom: 4px; font-weight: 500; }
-.snap-pina-val { font-size: 22px; font-weight: 800; color: #0f766e; font-variant-numeric: tabular-nums; }
-
-/* PRINT */
 @media print {
-  .app-header, .month-nav, .table-wrap, .export-section, .btn,
-  .add-row-btn-wrap, .actions-cell, .modal-overlay, .notif, #imageSnapshot { display: none !important; }
-  body { background: #fff; font-size: 13px; }
-  .main { max-width: 100%; padding: 0; }
-  .totals-card { box-shadow: none; border: 1px solid #ccc; break-inside: avoid; }
-  .print-header { display: block !important; margin-bottom: 16px; }
-  .print-expense-table { display: table !important; width: 100%; border-collapse: collapse; }
-  .print-expense-table th, .print-expense-table td {
-    border: 1px solid #ccc;
-    padding: 6px 8px;
-    font-size: 12px;
-    text-align: left;
-  }
-  .print-expense-table thead { background: #f0f0f0; }
+  .app-header,.month-nav,.table-wrap,.export-section,.sync-section,.btn,.add-row-btn-wrap,.actions-cell,.modal-overlay,.notif,#imageSnapshot { display:none !important; }
+  body { background:#fff; font-size:13px; }
+  .main { max-width:100%; padding:0; }
+  .totals-card { box-shadow:none; border:1px solid #ccc; break-inside:avoid; }
+  .print-header { display:block !important; margin-bottom:16px; }
+  .print-expense-table { display:table !important; width:100%; border-collapse:collapse; }
+  .print-expense-table th, .print-expense-table td { border:1px solid #ccc; padding:6px 8px; font-size:12px; text-align:left; }
+  .print-expense-table thead { background:#f0f0f0; }
 }
-
-.print-header { display: none; }
-.print-expense-table { display: none; }
+.print-header { display:none; }
+.print-expense-table { display:none; }
 </style>
 </head>
 <body>
 
-<!-- NOTIFICATION TOAST -->
 <div class="notif" id="notif"></div>
 
-<!-- MONTH HISTORY MODAL -->
 <div class="modal-overlay" id="modalOverlay">
   <div class="modal">
     <button class="modal-close" onclick="closeModal()">✕</button>
@@ -744,16 +223,15 @@ td.share  { font-variant-numeric: tabular-nums; }
   </div>
 </div>
 
-<!-- IMAGE SNAPSHOT (off-screen, rendered before html2canvas capture) -->
 <div id="imageSnapshot"></div>
 
-<!-- APP HEADER -->
 <header class="app-header">
   <div class="header-top">
     <div>
       <div class="app-title">🏠 Casa Pipi's</div>
-      <div class="app-subtitle">Gastos de casita · v1.3</div>
+      <div class="app-subtitle">Gastos de casita · v1.4</div>
     </div>
+    <button class="btn btn-sm" id="darkModeBtn" onclick="toggleDarkMode()" title="Cambiar tema">🌙</button>
   </div>
   <div class="header-meta">
     <div class="meta-field">
@@ -770,44 +248,29 @@ td.share  { font-variant-numeric: tabular-nums; }
   </div>
 </header>
 
-<!-- MONTH NAV -->
 <div class="month-nav">
   <button class="btn btn-icon" id="prevMonthBtn" title="Mes anterior">‹</button>
-  <div style="display:flex;align-items:center;justify-content:center;flex:1;gap:8px;">
+  <div style="display:flex;align-items:center;justify-content:center;gap:8px;flex:1;min-width:0;">
     <span class="month-label" id="monthLabel">—</span>
-    <span class="readonly-badge" id="readonlyBadge" style="display:none">Solo lectura</span>
+    <span id="readonlyBadge" class="readonly-badge" style="display:none">Solo lectura</span>
   </div>
-  <div style="display:flex;gap:8px;">
+  <div style="display:flex;gap:6px;flex-wrap:wrap;justify-content:flex-end;">
+    <button class="btn btn-sm" id="lockBtn" onclick="toggleLockMonth()" style="display:none">🔒 Cerrar mes</button>
     <button class="btn btn-sm" onclick="openModal()">📋 Historial</button>
     <button class="btn btn-primary btn-sm" onclick="createNewMonth()">+ Nuevo mes</button>
   </div>
   <button class="btn btn-icon" id="nextMonthBtn" title="Mes siguiente">›</button>
 </div>
 
-<!-- PRINT HEADER (only shown when printing) -->
 <div class="print-header" id="printHeader"></div>
 
-<!-- MAIN -->
 <main class="main">
 
-  <!-- EXPENSE TABLE -->
   <div class="table-wrap">
-    <div class="table-header">
-      <span class="table-title">Gastos</span>
-    </div>
+    <div class="table-header"><span class="table-title">Gastos</span></div>
     <div class="table-scroll">
       <table>
-        <thead>
-          <tr>
-            <th>Concepto</th>
-            <th>Moneda</th>
-            <th>Monto</th>
-            <th>Split</th>
-            <th>Mati</th>
-            <th>Pina</th>
-            <th>Acciones</th>
-          </tr>
-        </thead>
+        <thead><tr><th>Concepto</th><th>Moneda</th><th>Monto</th><th>Split</th><th>Mati</th><th>Pina</th><th>Acciones</th></tr></thead>
         <tbody id="expenseTbody"></tbody>
       </table>
     </div>
@@ -816,39 +279,20 @@ td.share  { font-variant-numeric: tabular-nums; }
     </div>
   </div>
 
-  <!-- TOTALS CARD -->
   <div class="totals-card" id="totalsCard">
     <div class="totals-title">Resumen del mes</div>
     <div class="totals-grid">
       <div class="totals-block">
         <div class="totals-block-title">Pesos (ARS)</div>
-        <div class="totals-row">
-          <span class="label">Total</span>
-          <span class="value" id="totalARS">$0,00</span>
-        </div>
-        <div class="totals-row">
-          <span class="label">Mati</span>
-          <span class="value" id="matiARS">$0,00</span>
-        </div>
-        <div class="totals-row highlight">
-          <span class="label">Pina</span>
-          <span class="value" id="pinaARS">$0,00</span>
-        </div>
+        <div class="totals-row"><span class="label">Total</span><span class="value" id="totalARS">$0</span></div>
+        <div class="totals-row"><span class="label">Mati</span><span class="value" id="matiARS">$0</span></div>
+        <div class="totals-row highlight"><span class="label">Pina</span><span class="value" id="pinaARS">$0</span></div>
       </div>
       <div class="totals-block">
         <div class="totals-block-title">Dólares (USD)</div>
-        <div class="totals-row">
-          <span class="label">Total</span>
-          <span class="value" id="totalUSD">USD 0,00</span>
-        </div>
-        <div class="totals-row">
-          <span class="label">Mati</span>
-          <span class="value" id="matiUSD">USD 0,00</span>
-        </div>
-        <div class="totals-row highlight">
-          <span class="label">Pina</span>
-          <span class="value" id="pinaUSD">USD 0,00</span>
-        </div>
+        <div class="totals-row"><span class="label">Total</span><span class="value" id="totalUSD">USD 0</span></div>
+        <div class="totals-row"><span class="label">Mati</span><span class="value" id="matiUSD">USD 0</span></div>
+        <div class="totals-row highlight"><span class="label">Pina</span><span class="value" id="pinaUSD">USD 0</span></div>
       </div>
     </div>
     <div class="pina-owes">
@@ -857,32 +301,29 @@ td.share  { font-variant-numeric: tabular-nums; }
     </div>
   </div>
 
-  <!-- PRINT EXPENSE TABLE (only shown when printing) -->
   <table class="print-expense-table">
     <thead><tr><th>Concepto</th><th>Moneda</th><th>Monto</th><th>Split</th><th>Mati</th><th>Pina</th></tr></thead>
     <tbody id="printTbody"></tbody>
   </table>
 
-  <!-- EXPORT -->
   <div class="export-section">
     <div class="export-title">Exportar mes</div>
     <div class="export-btns">
       <button class="btn" onclick="copyText()">📋 Copiar texto</button>
       <button class="btn" onclick="downloadPDF()">🖨️ Descargar PDF</button>
       <button class="btn" onclick="saveImage()">📷 Guardar imagen</button>
+      <button class="btn btn-wa" onclick="shareWhatsApp()">💬 Compartir WhatsApp</button>
     </div>
     <div class="export-title" style="margin-top:16px">Historial completo</div>
     <div class="export-btns">
       <button class="btn btn-primary" onclick="exportHistory()">⬇ Exportar historial (.json)</button>
       <button class="btn" onclick="document.getElementById('importFileInput').click()">⬆ Importar historial (.json)</button>
+      <button class="btn" onclick="exportToCSV()">📊 Exportar a Excel (.csv)</button>
     </div>
-    <div style="margin-top:8px;font-size:12px;color:var(--text-muted)">
-      Exportá el historial en esta PC e importalo en cualquier otro dispositivo para tener todos tus datos disponibles.
-    </div>
+    <div style="margin-top:8px;font-size:12px;color:var(--text-muted)">Exportá el historial e importalo en cualquier dispositivo. El CSV se puede abrir directo en Excel.</div>
     <input type="file" id="importFileInput" accept=".json" style="display:none" onchange="importHistory(event)">
   </div>
 
-  <!-- GITHUB SYNC -->
   <div class="sync-section">
     <div class="export-title">Sincronización con GitHub</div>
     <div class="sync-token-row">
@@ -898,246 +339,161 @@ td.share  { font-variant-numeric: tabular-nums; }
       <button class="btn btn-primary" onclick="pushToGithub()">☁ Guardar en GitHub</button>
       <button class="btn" onclick="pullFromGithub()">⬇ Traer desde GitHub</button>
     </div>
-    <div style="margin-top:10px;font-size:12px;color:var(--text-muted);line-height:1.6">
-      Los datos se guardan en <code style="background:var(--bg);padding:1px 5px;border-radius:3px;font-size:11px">data/history.json</code> dentro de tu repo.
-      Con el token configurado, al abrir la app se carga el historial de GitHub automáticamente.
-    </div>
+    <div style="margin-top:10px;font-size:12px;color:var(--text-muted);line-height:1.6">Los datos se guardan en <code style="background:var(--bg);padding:1px 5px;border-radius:3px;font-size:11px">data/history.json</code> dentro de tu repo.</div>
   </div>
 
 </main>
 
 <script>
-// ─── CONSTANTS ────────────────────────────────────────────────────────────────
 const STORAGE_KEY      = 'casapi_months';
 const GH_TOKEN_KEY     = 'casapi_github_token';
 const GH_LAST_SYNC_KEY = 'casapi_last_sync';
+const DARK_MODE_KEY    = 'casapi_darkmode';
 const GH_OWNER         = 'matiasbert';
 const GH_REPO          = 'casa-pipis';
 const GH_DATA_PATH     = 'data/history.json';
 const GH_API_URL       = `https://api.github.com/repos/${GH_OWNER}/${GH_REPO}/contents/${GH_DATA_PATH}`;
 const RECURRING_TEMPLATES = [
-  { name: 'Alquiler',       currency: 'ARS' },
-  { name: 'Expensas',       currency: 'ARS' },
-  { name: 'Telecentro',     currency: 'ARS' },
-  { name: 'Edesur',    currency: 'ARS' },
-  { name: 'Metrogas', currency: 'ARS' },
+  { name: 'Alquiler',   currency: 'ARS' },
+  { name: 'Expensas',   currency: 'ARS' },
+  { name: 'Telecentro', currency: 'ARS' },
+  { name: 'Edesur',     currency: 'ARS' },
+  { name: 'Metrogas',   currency: 'ARS' },
 ];
+const MONTH_NAMES_ES = ['Enero','Febrero','Marzo','Abril','Mayo','Junio','Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'];
 
-const MONTH_NAMES_ES = [
-  'Enero','Febrero','Marzo','Abril','Mayo','Junio',
-  'Julio','Agosto','Septiembre','Octubre','Noviembre','Diciembre'
-];
-
-// ─── STATE ────────────────────────────────────────────────────────────────────
 let allMonths = {};
 let currentKey = '';
 let editingItemId = null;
 
-// ─── UTILS ────────────────────────────────────────────────────────────────────
-function todayKey() {
-  const d = new Date();
-  return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`;
-}
-
-function keyToLabel(key) {
-  const [y, m] = key.split('-');
-  return `${MONTH_NAMES_ES[parseInt(m,10)-1]} ${y}`;
-}
-
-function uid() {
-  return Math.random().toString(36).slice(2,10) + Date.now().toString(36);
-}
-
-function fmtARS(n) {
-  if (n === null || n === undefined || isNaN(n)) return '$0,00';
-  return '$' + n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function fmtUSD(n) {
-  if (n === null || n === undefined || isNaN(n)) return 'USD 0,00';
-  return 'USD ' + n.toLocaleString('es-AR', { minimumFractionDigits: 2, maximumFractionDigits: 2 });
-}
-
-function fmtAmount(n, currency) {
-  return currency === 'USD' ? fmtUSD(n) : fmtARS(n);
-}
-
+function todayKey() { const d = new Date(); return `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,'0')}`; }
+function keyToLabel(key) { const [y, m] = key.split('-'); return `${MONTH_NAMES_ES[parseInt(m,10)-1]} ${y}`; }
+function uid() { return Math.random().toString(36).slice(2,10) + Date.now().toString(36); }
+function fmtARS(n) { if (n === null || n === undefined || isNaN(n)) return '$0'; return '$' + Math.round(n).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
+function fmtUSD(n) { if (n === null || n === undefined || isNaN(n)) return 'USD 0'; return 'USD ' + Math.round(n).toLocaleString('es-AR', { minimumFractionDigits: 0, maximumFractionDigits: 0 }); }
+function fmtAmount(n, currency) { return currency === 'USD' ? fmtUSD(n) : fmtARS(n); }
 function clamp(v, lo, hi) { return Math.min(hi, Math.max(lo, v)); }
+function showNotif(msg) { const el = document.getElementById('notif'); el.textContent = msg; el.classList.add('show'); setTimeout(() => el.classList.remove('show'), 2500); }
 
-function showNotif(msg) {
-  const el = document.getElementById('notif');
-  el.textContent = msg;
-  el.classList.add('show');
-  setTimeout(() => el.classList.remove('show'), 2500);
-}
+function saveAll() { localStorage.setItem(STORAGE_KEY, JSON.stringify(allMonths)); }
+function loadAll() { try { const raw = localStorage.getItem(STORAGE_KEY); if (raw) allMonths = JSON.parse(raw); } catch(e) { allMonths = {}; } }
 
-// ─── STORAGE ──────────────────────────────────────────────────────────────────
-function saveAll() {
-  localStorage.setItem(STORAGE_KEY, JSON.stringify(allMonths));
-}
+function newItemFromTemplate(tpl) { return { id: uid(), name: tpl.name, currency: tpl.currency, amount: 0, splitOverride: null, notes: '', installments: null, isRecurring: true }; }
+function createMonthRecord(key) { return { key, matiSplit: 75, pinaSplit: 25, locked: false, items: RECURRING_TEMPLATES.map(newItemFromTemplate) }; }
 
-function loadAll() {
-  try {
-    const raw = localStorage.getItem(STORAGE_KEY);
-    if (raw) allMonths = JSON.parse(raw);
-  } catch(e) {
-    allMonths = {};
+function applyCarryOver(newMonth) {
+  const prevKeys = getSortedKeys().filter(k => k < newMonth.key);
+  if (!prevKeys.length) return;
+  const prev = allMonths[prevKeys[prevKeys.length - 1]];
+  if (!prev) return;
+  const prevAlq = prev.items.find(i => i.name === 'Alquiler');
+  const newAlq  = newMonth.items.find(i => i.name === 'Alquiler');
+  if (prevAlq && newAlq) newAlq.amount = prevAlq.amount;
+  for (const item of prev.items) {
+    if (item.installments && item.installments.current < item.installments.total) {
+      newMonth.items.push({ ...item, id: uid(), installments: { current: item.installments.current + 1, total: item.installments.total } });
+    }
   }
-}
-
-// ─── MONTH RECORD HELPERS ─────────────────────────────────────────────────────
-function newItemFromTemplate(tpl) {
-  return {
-    id: uid(),
-    name: tpl.name,
-    currency: tpl.currency,
-    amount: 0,
-    splitOverride: null,
-    isRecurring: true,
-  };
-}
-
-function createMonthRecord(key) {
-  return {
-    key,
-    matiSplit: 75,
-    pinaSplit: 25,
-    items: RECURRING_TEMPLATES.map(newItemFromTemplate),
-  };
 }
 
 function ensureCurrentMonth() {
   const key = todayKey();
-  if (!allMonths[key]) {
-    allMonths[key] = createMonthRecord(key);
-    saveAll();
-  }
+  if (!allMonths[key]) { const m = createMonthRecord(key); applyCarryOver(m); allMonths[key] = m; saveAll(); }
   return key;
 }
-
-function getSortedKeys() {
-  return Object.keys(allMonths).sort();
-}
-
+function getSortedKeys() { return Object.keys(allMonths).sort(); }
 function getMonth() { return allMonths[currentKey]; }
+function isReadonly() { const m = getMonth(); return currentKey !== todayKey() || !!(m && m.locked); }
 
-function isReadonly() { return currentKey !== todayKey(); }
-
-// ─── SPLIT CALC ───────────────────────────────────────────────────────────────
 function calcShares(item, month) {
   const matiPct = item.splitOverride ? item.splitOverride.mati : month.matiSplit;
   const pinaPct = item.splitOverride ? item.splitOverride.pina : month.pinaSplit;
   const amt = parseFloat(item.amount) || 0;
-  return {
-    mati: amt * matiPct / 100,
-    pina: amt * pinaPct / 100,
-    matiPct,
-    pinaPct,
-  };
+  return { mati: amt * matiPct / 100, pina: amt * pinaPct / 100, matiPct, pinaPct };
 }
-
 function calcTotals(month) {
-  let totalARS = 0, matiARS = 0, pinaARS = 0;
-  let totalUSD = 0, matiUSD = 0, pinaUSD = 0;
+  let totalARS=0, matiARS=0, pinaARS=0, totalUSD=0, matiUSD=0, pinaUSD=0;
   for (const item of month.items) {
     const amt = parseFloat(item.amount) || 0;
     const { mati, pina } = calcShares(item, month);
-    if (item.currency === 'ARS') {
-      totalARS += amt; matiARS += mati; pinaARS += pina;
-    } else {
-      totalUSD += amt; matiUSD += mati; pinaUSD += pina;
-    }
+    if (item.currency === 'ARS') { totalARS+=amt; matiARS+=mati; pinaARS+=pina; }
+    else { totalUSD+=amt; matiUSD+=mati; pinaUSD+=pina; }
   }
   return { totalARS, matiARS, pinaARS, totalUSD, matiUSD, pinaUSD };
 }
 
-// ─── RENDER ───────────────────────────────────────────────────────────────────
 function renderAll() {
   const month = getMonth();
   if (!month) return;
-
   const readonly = isReadonly();
-
   document.getElementById('matiSplitInput').value = month.matiSplit;
   document.getElementById('pinaSplitInput').value = month.pinaSplit;
   document.getElementById('monthLabel').textContent = keyToLabel(currentKey);
-  document.getElementById('readonlyBadge').style.display = readonly ? '' : 'none';
-
-  const keys = getSortedKeys();
-  const idx = keys.indexOf(currentKey);
+  const badge = document.getElementById('readonlyBadge');
+  if (readonly) {
+    badge.style.display = '';
+    if (month.locked) { badge.textContent = '🔒 Cerrado'; badge.className = 'locked-badge'; }
+    else { badge.textContent = 'Solo lectura'; badge.className = 'readonly-badge'; }
+  } else { badge.style.display = 'none'; badge.className = 'readonly-badge'; }
+  const lockBtn = document.getElementById('lockBtn');
+  if (currentKey === todayKey()) {
+    lockBtn.style.display = '';
+    lockBtn.textContent = month.locked ? '🔓 Reabrir mes' : '🔒 Cerrar mes';
+    lockBtn.className = month.locked ? 'btn btn-sm btn-primary' : 'btn btn-sm';
+  } else { lockBtn.style.display = 'none'; }
+  const keys = getSortedKeys(); const idx = keys.indexOf(currentKey);
   document.getElementById('prevMonthBtn').disabled = idx <= 0;
   document.getElementById('nextMonthBtn').disabled = idx >= keys.length - 1;
-
   document.getElementById('matiSplitInput').disabled = readonly;
   document.getElementById('pinaSplitInput').disabled = readonly;
   document.getElementById('addRowBtnWrap').style.display = readonly ? 'none' : '';
-
-  renderTable(month, readonly);
-  renderTotals(month);
-  renderPrintHeader(month);
+  renderTable(month, readonly); renderTotals(month); renderPrintHeader(month);
 }
 
 function renderTable(month, readonly) {
   const tbody = document.getElementById('expenseTbody');
   tbody.innerHTML = '';
-
   if (!month.items.length) {
     const tr = document.createElement('tr');
     tr.innerHTML = `<td colspan="7"><div class="empty-state">Sin gastos aún.<br><p>Hacé clic en "+ Agregar gasto" para empezar.</p></div></td>`;
-    tbody.appendChild(tr);
-    return;
+    tbody.appendChild(tr); return;
   }
-
   for (const item of month.items) {
-    if (editingItemId === item.id && !readonly) {
-      tbody.appendChild(buildEditRow(item, month));
-    } else {
-      tbody.appendChild(buildViewRow(item, month, readonly));
-    }
+    if (editingItemId === item.id && !readonly) tbody.appendChild(buildEditRow(item, month));
+    else tbody.appendChild(buildViewRow(item, month, readonly));
   }
 }
 
 function buildViewRow(item, month, readonly) {
   const { mati, pina, matiPct, pinaPct } = calcShares(item, month);
   const hasOverride = !!item.splitOverride;
-  const splitLabel = hasOverride
-    ? `<span class="split-override-label">${matiPct}% / ${pinaPct}%</span>`
-    : `<span class="split-label">Global (${matiPct}% / ${pinaPct}%)</span>`;
-
+  const splitLabel = hasOverride ? `<span class="split-override-label">${matiPct}% / ${pinaPct}%</span>` : `<span class="split-label">Global (${matiPct}% / ${pinaPct}%)</span>`;
+  const installBadge = item.installments ? `<span class="installment-badge">cuota ${item.installments.current}/${item.installments.total}</span>` : '';
+  const notesHtml = item.notes ? `<div class="item-notes">${escHtml(item.notes)}</div>` : '';
   const tr = document.createElement('tr');
   tr.innerHTML = `
-    <td>${escHtml(item.name)}</td>
+    <td>${escHtml(item.name)}${installBadge}${notesHtml}</td>
     <td><span class="badge-${item.currency.toLowerCase()}">${item.currency}</span></td>
     <td class="amount">${fmtAmount(parseFloat(item.amount)||0, item.currency)}</td>
     <td>${splitLabel}</td>
     <td class="share">${fmtAmount(mati, item.currency)}</td>
     <td class="share">${fmtAmount(pina, item.currency)}</td>
-    <td>
-      <div class="actions-cell">
-        ${!readonly
-          ? `<button class="btn btn-sm" onclick="startEdit('${item.id}')">✏️ Editar</button>
-             <button class="btn btn-sm btn-danger" onclick="deleteItem('${item.id}')">✕</button>`
-          : '—'}
-      </div>
-    </td>`;
+    <td><div class="actions-cell">${!readonly ? `<button class="btn btn-sm" onclick="startEdit('${item.id}')">✏️ Editar</button><button class="btn btn-sm btn-danger" onclick="deleteItem('${item.id}')">✕</button>` : '—'}</div></td>`;
   return tr;
 }
 
 function buildEditRow(item, month) {
-  // Always show split inputs; pre-fill with override values if exists, else global
   const matiVal = item.splitOverride ? item.splitOverride.mati : month.matiSplit;
   const pinaVal = item.splitOverride ? item.splitOverride.pina : month.pinaSplit;
-
+  const instChecked = item.installments ? 'checked' : '';
+  const instCurrent = item.installments ? item.installments.current : 1;
+  const instTotal   = item.installments ? item.installments.total   : 12;
+  const instDisplay = item.installments ? 'inline-flex' : 'none';
   const tr = document.createElement('tr');
   tr.className = 'edit-row';
   tr.innerHTML = `
     <td><input type="text" id="eName" value="${escAttr(item.name)}" placeholder="Concepto"></td>
-    <td>
-      <select id="eCurrency">
-        <option value="ARS"${item.currency==='ARS'?' selected':''}>ARS</option>
-        <option value="USD"${item.currency==='USD'?' selected':''}>USD</option>
-      </select>
-    </td>
+    <td><select id="eCurrency"><option value="ARS"${item.currency==='ARS'?' selected':''}>ARS</option><option value="USD"${item.currency==='USD'?' selected':''}>USD</option></select></td>
     <td><input type="number" id="eAmount" value="${item.amount||""}" placeholder="0" min="0" step="0.01"></td>
     <td colspan="3">
       <div class="split-edit-row">
@@ -1150,54 +506,35 @@ function buildEditRow(item, month) {
           <span style="font-size:12px">%</span>
           <span class="split-sum-hint" id="splitSumHint"></span>
         </div>
-        <button class="btn btn-sm" onclick="resetToGlobalSplit()" title="Usar el split global del mes">↺ Global (${month.matiSplit}%/${month.pinaSplit}%)</button>
+        <button class="btn btn-sm" onclick="resetToGlobalSplit()">↺ Global (${month.matiSplit}%/${month.pinaSplit}%)</button>
       </div>
+      <div class="install-row">
+        <label style="display:flex;align-items:center;gap:4px;cursor:pointer;color:var(--text)"><input type="checkbox" id="eInstall" ${instChecked} onchange="toggleInstallUI()"><span>Cuotas</span></label>
+        <span id="installDetails" style="display:${instDisplay};align-items:center;gap:4px">
+          <span>Cuota</span><input type="number" id="eInstallCurrent" value="${instCurrent}" min="1" style="width:48px!important">
+          <span>de</span><input type="number" id="eInstallTotal" value="${instTotal}" min="1" style="width:48px!important">
+        </span>
+      </div>
+      <div style="margin-top:6px"><textarea id="eNotes" placeholder="Notas (opcional)" rows="2">${escText(item.notes || '')}</textarea></div>
     </td>
-    <td>
-      <div class="actions-cell">
-        <button class="btn btn-sm btn-primary" onclick="saveEdit('${item.id}')">✓ Guardar</button>
-        <button class="btn btn-sm" onclick="cancelEdit()">✕</button>
-      </div>
-    </td>`;
+    <td><div class="actions-cell"><button class="btn btn-sm btn-primary" onclick="saveEdit('${item.id}')">✓ Guardar</button><button class="btn btn-sm" onclick="cancelEdit()">✕</button></div></td>`;
   return tr;
 }
 
-function resetToGlobalSplit() {
-  const month = getMonth();
-  if (!month) return;
-  document.getElementById('eMati').value = month.matiSplit;
-  document.getElementById('ePina').value = month.pinaSplit;
-  updateSplitHint();
-}
-
+function toggleInstallUI() { const chk = document.getElementById('eInstall'); const det = document.getElementById('installDetails'); if (det) det.style.display = chk.checked ? 'inline-flex' : 'none'; }
+function resetToGlobalSplit() { const month = getMonth(); if (!month) return; document.getElementById('eMati').value = month.matiSplit; document.getElementById('ePina').value = month.pinaSplit; updateSplitHint(); }
 function syncSplitInputs(changed) {
-  const matiEl = document.getElementById('eMati');
-  const pinaEl = document.getElementById('ePina');
-  let m = parseFloat(matiEl.value) || 0;
-  let p = parseFloat(pinaEl.value) || 0;
-  if (changed === 'mati') {
-    m = clamp(m, 0, 100);
-    pinaEl.value = Math.max(0, 100 - m);
-  } else {
-    p = clamp(p, 0, 100);
-    matiEl.value = Math.max(0, 100 - p);
-  }
+  const matiEl = document.getElementById('eMati'); const pinaEl = document.getElementById('ePina');
+  let m = parseFloat(matiEl.value) || 0; let p = parseFloat(pinaEl.value) || 0;
+  if (changed === 'mati') { m = clamp(m,0,100); pinaEl.value = Math.max(0, 100-m); } else { p = clamp(p,0,100); matiEl.value = Math.max(0, 100-p); }
   updateSplitHint();
 }
-
 function updateSplitHint() {
-  const hint = document.getElementById('splitSumHint');
-  if (!hint) return;
+  const hint = document.getElementById('splitSumHint'); if (!hint) return;
   const m = parseFloat(document.getElementById('eMati').value) || 0;
   const p = parseFloat(document.getElementById('ePina').value) || 0;
   const sum = m + p;
-  if (Math.abs(sum - 100) > 0.01) {
-    hint.textContent = `⚠ Suma: ${sum}%`;
-    hint.className = 'split-sum-hint error';
-  } else {
-    hint.textContent = '✓ 100%';
-    hint.className = 'split-sum-hint';
-  }
+  if (Math.abs(sum - 100) > 0.01) { hint.textContent = `⚠ Suma: ${sum}%`; hint.className = 'split-sum-hint error'; } else { hint.textContent = '✓ 100%'; hint.className = 'split-sum-hint'; }
 }
 
 function renderTotals(month) {
@@ -1208,559 +545,332 @@ function renderTotals(month) {
   document.getElementById('totalUSD').textContent = fmtUSD(t.totalUSD);
   document.getElementById('matiUSD').textContent  = fmtUSD(t.matiUSD);
   document.getElementById('pinaUSD').textContent  = fmtUSD(t.pinaUSD);
-
   document.getElementById('pinaOwesLabel').textContent = `Gastos Pina — ${keyToLabel(currentKey)}`;
-
   const parts = [];
   if (t.pinaARS > 0.001) parts.push(fmtARS(t.pinaARS));
   if (t.pinaUSD > 0.001) parts.push(fmtUSD(t.pinaUSD));
-  document.getElementById('pinaOwes').textContent = parts.length ? parts.join(' + ') : '$0,00';
+  document.getElementById('pinaOwes').textContent = parts.length ? parts.join(' + ') : '$0';
 }
 
 function renderPrintHeader(month) {
-  document.getElementById('printHeader').innerHTML =
-    `<h2 style="margin-bottom:4px">Casa Pipi's — ${keyToLabel(month.key)}</h2>
-     <p style="color:#666;font-size:13px">Split global: Mati ${month.matiSplit}% / Pina ${month.pinaSplit}%</p>`;
-
+  document.getElementById('printHeader').innerHTML = `<h2 style="margin-bottom:4px">Casa Pipi's — ${keyToLabel(month.key)}</h2><p style="color:#666;font-size:13px">Split global: Mati ${month.matiSplit}% / Pina ${month.pinaSplit}%</p>`;
   const ptbody = document.getElementById('printTbody');
   ptbody.innerHTML = '';
   for (const item of month.items) {
     const { mati, pina, matiPct, pinaPct } = calcShares(item, month);
     const amt = parseFloat(item.amount) || 0;
+    const cuota = item.installments ? ` (cuota ${item.installments.current}/${item.installments.total})` : '';
     const tr = document.createElement('tr');
-    tr.innerHTML = `
-      <td>${escHtml(item.name)}</td>
-      <td>${item.currency}</td>
-      <td>${fmtAmount(amt, item.currency)}</td>
-      <td>${item.splitOverride ? `${matiPct}%/${pinaPct}%` : 'Global'}</td>
-      <td>${fmtAmount(mati, item.currency)}</td>
-      <td>${fmtAmount(pina, item.currency)}</td>`;
+    tr.innerHTML = `<td>${escHtml(item.name + cuota)}</td><td>${item.currency}</td><td>${fmtAmount(amt, item.currency)}</td><td>${item.splitOverride ? `${matiPct}%/${pinaPct}%` : 'Global'}</td><td>${fmtAmount(mati, item.currency)}</td><td>${fmtAmount(pina, item.currency)}</td>`;
     ptbody.appendChild(tr);
   }
 }
 
-// ─── ACTIONS ──────────────────────────────────────────────────────────────────
-function startEdit(id) {
-  editingItemId = id;
-  renderAll();
-  setTimeout(() => { const el = document.getElementById('eName'); if (el) el.focus(); }, 50);
-}
-
-function cancelEdit() {
-  editingItemId = null;
-  renderAll();
-}
+function startEdit(id) { editingItemId = id; renderAll(); setTimeout(() => { const el = document.getElementById('eName'); if (el) el.focus(); }, 50); }
+function cancelEdit() { editingItemId = null; renderAll(); }
 
 function saveEdit(id) {
-  const month = getMonth();
-  if (!month) return;
-
+  const month = getMonth(); if (!month) return;
   const name     = (document.getElementById('eName')?.value || '').trim();
   const currency = document.getElementById('eCurrency')?.value || 'ARS';
   const amount   = parseFloat(document.getElementById('eAmount')?.value) || 0;
   const m        = parseFloat(document.getElementById('eMati')?.value) || 0;
   const p        = parseFloat(document.getElementById('ePina')?.value) || 0;
-
-  if (Math.abs(m + p - 100) > 0.01) {
-    showNotif('⚠ El split debe sumar 100%');
-    return;
-  }
-
-  // Store as override only if it differs from global split
-  const splitOverride = (m === month.matiSplit && p === month.pinaSplit)
-    ? null
-    : { mati: m, pina: p };
-
+  const notes    = (document.getElementById('eNotes')?.value || '').trim();
+  const instChk  = document.getElementById('eInstall');
+  const instCur  = parseInt(document.getElementById('eInstallCurrent')?.value) || 1;
+  const instTot  = parseInt(document.getElementById('eInstallTotal')?.value)   || instCur;
+  if (Math.abs(m + p - 100) > 0.01) { showNotif('⚠ El split debe sumar 100%'); return; }
+  const splitOverride = (m === month.matiSplit && p === month.pinaSplit) ? null : { mati: m, pina: p };
+  const installments  = instChk?.checked ? { current: Math.max(1, instCur), total: Math.max(instCur, instTot) } : null;
   const item = month.items.find(i => i.id === id);
-  if (item) {
-    item.name = name || item.name;
-    item.currency = currency;
-    item.amount = amount;
-    item.splitOverride = splitOverride;
-  }
-
-  editingItemId = null;
-  saveAll();
-  renderAll();
+  if (item) { item.name = name || item.name; item.currency = currency; item.amount = amount; item.splitOverride = splitOverride; item.notes = notes; item.installments = installments; }
+  editingItemId = null; saveAll(); renderAll();
 }
 
-function deleteItem(id) {
-  const month = getMonth();
-  if (!month) return;
-  month.items = month.items.filter(i => i.id !== id);
-  if (editingItemId === id) editingItemId = null;
-  saveAll();
-  renderAll();
-}
+function deleteItem(id) { const month = getMonth(); if (!month) return; month.items = month.items.filter(i => i.id !== id); if (editingItemId === id) editingItemId = null; saveAll(); renderAll(); }
 
 function addNewItem() {
-  const month = getMonth();
-  if (!month) return;
-  const newItem = { id: uid(), name: '', currency: 'ARS', amount: 0, splitOverride: null, isRecurring: false };
-  month.items.push(newItem);
-  editingItemId = newItem.id;
-  saveAll();
-  renderAll();
-  setTimeout(() => {
-    const lastRow = document.getElementById('expenseTbody').lastElementChild;
-    if (lastRow) lastRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
-  }, 100);
+  const month = getMonth(); if (!month) return;
+  const newItem = { id: uid(), name: '', currency: 'ARS', amount: 0, splitOverride: null, notes: '', installments: null, isRecurring: false };
+  month.items.push(newItem); editingItemId = newItem.id; saveAll(); renderAll();
+  setTimeout(() => { const lastRow = document.getElementById('expenseTbody').lastElementChild; if (lastRow) lastRow.scrollIntoView({ behavior: 'smooth', block: 'nearest' }); }, 100);
 }
 
 function createNewMonth() {
   const key = todayKey();
-  if (allMonths[key]) {
-    currentKey = key;
-    editingItemId = null;
-    renderAll();
-    showNotif('Ya existe el mes actual');
-    return;
-  }
-  allMonths[key] = createMonthRecord(key);
-  currentKey = key;
-  editingItemId = null;
-  saveAll();
-  renderAll();
+  if (allMonths[key]) { currentKey = key; editingItemId = null; renderAll(); showNotif('Ya existe el mes actual'); return; }
+  const newMonth = createMonthRecord(key);
+  applyCarryOver(newMonth);
+  allMonths[key] = newMonth; currentKey = key; editingItemId = null; saveAll(); renderAll();
   showNotif(`Nuevo mes creado: ${keyToLabel(key)}`);
 }
 
 function navigateMonth(delta) {
-  const keys = getSortedKeys();
-  const idx = keys.indexOf(currentKey);
-  const newIdx = idx + delta;
+  const keys = getSortedKeys(); const idx = keys.indexOf(currentKey); const newIdx = idx + delta;
   if (newIdx < 0 || newIdx >= keys.length) return;
-  editingItemId = null;
-  currentKey = keys[newIdx];
-  renderAll();
+  editingItemId = null; currentKey = keys[newIdx]; renderAll();
 }
 
-// ─── HEADER INPUTS ────────────────────────────────────────────────────────────
+function toggleLockMonth() {
+  const month = getMonth(); if (!month || currentKey !== todayKey()) return;
+  if (!month.locked && !confirm('¿Cerrar el mes? No podrás editar los gastos hasta reabrirlo.')) return;
+  month.locked = !month.locked; saveAll(); renderAll();
+  showNotif(month.locked ? '🔒 Mes cerrado' : '🔓 Mes reabierto');
+}
+
 document.getElementById('matiSplitInput').addEventListener('change', function() {
-  const month = getMonth();
-  if (!month || isReadonly()) return;
-  let m = clamp(parseFloat(this.value)||0, 0, 100);
-  month.matiSplit = m;
-  month.pinaSplit = 100 - m;
-  document.getElementById('pinaSplitInput').value = month.pinaSplit;
-  saveAll(); renderAll();
+  const month = getMonth(); if (!month || isReadonly()) return;
+  let m = clamp(parseFloat(this.value)||0, 0, 100); month.matiSplit = m; month.pinaSplit = 100 - m;
+  document.getElementById('pinaSplitInput').value = month.pinaSplit; saveAll(); renderAll();
 });
-
 document.getElementById('pinaSplitInput').addEventListener('change', function() {
-  const month = getMonth();
-  if (!month || isReadonly()) return;
-  let p = clamp(parseFloat(this.value)||0, 0, 100);
-  month.pinaSplit = p;
-  month.matiSplit = 100 - p;
-  document.getElementById('matiSplitInput').value = month.matiSplit;
-  saveAll(); renderAll();
+  const month = getMonth(); if (!month || isReadonly()) return;
+  let p = clamp(parseFloat(this.value)||0, 0, 100); month.pinaSplit = p; month.matiSplit = 100 - p;
+  document.getElementById('matiSplitInput').value = month.matiSplit; saveAll(); renderAll();
 });
-
 document.getElementById('prevMonthBtn').addEventListener('click', () => navigateMonth(-1));
 document.getElementById('nextMonthBtn').addEventListener('click', () => navigateMonth(1));
 
-// ─── MODAL ────────────────────────────────────────────────────────────────────
+function toggleDarkMode() {
+  const isDark = document.body.classList.toggle('dark');
+  localStorage.setItem(DARK_MODE_KEY, isDark ? '1' : '0');
+  document.getElementById('darkModeBtn').textContent = isDark ? '☀' : '🌙';
+}
+function initDarkMode() {
+  if (localStorage.getItem(DARK_MODE_KEY) === '1') { document.body.classList.add('dark'); document.getElementById('darkModeBtn').textContent = '☀'; }
+}
+
 function openModal() {
-  const list = document.getElementById('monthList');
-  list.innerHTML = '';
+  const list = document.getElementById('monthList'); list.innerHTML = '';
   const keys = getSortedKeys().reverse();
-
-  if (!keys.length) {
-    list.innerHTML = '<li style="color:var(--text-muted);font-size:13px">Sin meses guardados.</li>';
-  }
-
+  if (!keys.length) { list.innerHTML = '<li style="color:var(--text-muted);font-size:13px">Sin meses guardados.</li>'; }
   for (const k of keys) {
-    const li = document.createElement('li');
-    li.className = k === currentKey ? 'active' : '';
-    li.innerHTML = `
-      <span>${keyToLabel(k)}</span>
-      <div class="month-list-actions">
-        <button class="btn btn-sm" onclick="goToMonth('${k}')">Ver</button>
-        ${k !== todayKey() ? `<button class="btn btn-sm btn-danger" onclick="deleteMonth('${k}')">Borrar</button>` : ''}
-      </div>`;
+    const li = document.createElement('li'); li.className = k === currentKey ? 'active' : '';
+    li.innerHTML = `<span>${keyToLabel(k)}${allMonths[k]?.locked ? ' 🔒' : ''}</span><div class="month-list-actions"><button class="btn btn-sm" onclick="goToMonth('${k}')">Ver</button>${k !== todayKey() ? `<button class="btn btn-sm btn-danger" onclick="deleteMonth('${k}')">Borrar</button>` : ''}</div>`;
     list.appendChild(li);
   }
-
   document.getElementById('modalOverlay').classList.add('open');
 }
-
-function closeModal() {
-  document.getElementById('modalOverlay').classList.remove('open');
-}
-
-document.getElementById('modalOverlay').addEventListener('click', function(e) {
-  if (e.target === this) closeModal();
-});
-
-function goToMonth(key) {
-  currentKey = key; editingItemId = null; closeModal(); renderAll();
-}
-
+function closeModal() { document.getElementById('modalOverlay').classList.remove('open'); }
+document.getElementById('modalOverlay').addEventListener('click', function(e) { if (e.target === this) closeModal(); });
+function goToMonth(key) { currentKey = key; editingItemId = null; closeModal(); renderAll(); }
 function deleteMonth(key) {
   if (!confirm(`¿Borrar el registro de ${keyToLabel(key)}? Esta acción no se puede deshacer.`)) return;
-  delete allMonths[key];
-  saveAll();
-  const keys = getSortedKeys();
-  currentKey = keys.length ? keys[keys.length - 1] : ensureCurrentMonth();
-  closeModal(); renderAll();
-  showNotif('Mes borrado');
+  delete allMonths[key]; saveAll();
+  const keys = getSortedKeys(); currentKey = keys.length ? keys[keys.length-1] : ensureCurrentMonth();
+  closeModal(); renderAll(); showNotif('Mes borrado');
 }
 
-// ─── EXPORT ───────────────────────────────────────────────────────────────────
 function buildTextSummary() {
-  const month = getMonth();
-  if (!month) return '';
+  const month = getMonth(); if (!month) return '';
   const t = calcTotals(month);
-  const lines = [];
-
-  lines.push(`Casa Pipi's — ${keyToLabel(month.key)}`);
-  lines.push('');
-  lines.push('GASTOS:');
-
+  const lines = [`Casa Pipi's — ${keyToLabel(month.key)}`, '', 'GASTOS:'];
   for (const item of month.items) {
-    const amt = parseFloat(item.amount) || 0;
-    if (!amt) continue;
+    const amt = parseFloat(item.amount) || 0; if (!amt) continue;
     const { pina } = calcShares(item, month);
-    const cur = item.currency;
-    lines.push(`• ${item.name}: ${fmtAmount(amt, cur)} → Pina: ${fmtAmount(pina, cur)}`);
+    const cuota = item.installments ? ` (cuota ${item.installments.current}/${item.installments.total})` : '';
+    const notes = item.notes ? ` — ${item.notes}` : '';
+    lines.push(`• ${item.name}${cuota}: ${fmtAmount(amt, item.currency)} → Pina: ${fmtAmount(pina, item.currency)}${notes}`);
   }
-
-  lines.push('');
-  lines.push(`TOTAL PESOS: ${fmtARS(t.totalARS)} | Pina: ${fmtARS(t.pinaARS)}`);
-  lines.push(`TOTAL USD: ${fmtUSD(t.totalUSD)} | Pina: ${fmtUSD(t.pinaUSD)}`);
-  lines.push('');
-
+  lines.push('', `TOTAL PESOS: ${fmtARS(t.totalARS)} | Pina: ${fmtARS(t.pinaARS)}`);
+  lines.push(`TOTAL USD: ${fmtUSD(t.totalUSD)} | Pina: ${fmtUSD(t.pinaUSD)}`, '');
   const parts = [];
   if (t.pinaARS > 0.001) parts.push(fmtARS(t.pinaARS));
   if (t.pinaUSD > 0.001) parts.push(fmtUSD(t.pinaUSD));
-  lines.push(`Gastos Pina ${keyToLabel(month.key)}: ${parts.join(' + ') || '$0,00'}`);
-
+  lines.push(`Gastos Pina ${keyToLabel(month.key)}: ${parts.join(' + ') || '$0'}`);
   return lines.join('\n');
 }
 
 function copyText() {
   const text = buildTextSummary();
-  navigator.clipboard.writeText(text).then(() => {
-    showNotif('✓ Texto copiado al portapapeles');
-  }).catch(() => {
-    const ta = document.createElement('textarea');
-    ta.value = text;
-    document.body.appendChild(ta);
-    ta.select();
-    document.execCommand('copy');
-    document.body.removeChild(ta);
-    showNotif('✓ Texto copiado');
-  });
+  navigator.clipboard.writeText(text).then(() => showNotif('✓ Texto copiado al portapapeles')).catch(() => { const ta = document.createElement('textarea'); ta.value = text; document.body.appendChild(ta); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); showNotif('✓ Texto copiado'); });
 }
-
-function downloadPDF() {
-  window.print();
-}
+function downloadPDF() { window.print(); }
 
 function buildImageSnapshot() {
-  const month = getMonth();
-  if (!month) return;
+  const month = getMonth(); if (!month) return;
   const t = calcTotals(month);
   const snap = document.getElementById('imageSnapshot');
-
-  // Build expense rows HTML
   let rowsHtml = '';
   for (const item of month.items) {
-    const amt = parseFloat(item.amount) || 0;
-    if (!amt) continue;
+    const amt = parseFloat(item.amount) || 0; if (!amt) continue;
     const { mati, pina, matiPct, pinaPct } = calcShares(item, month);
-    const hasOvr = !!item.splitOverride;
-    const splitTxt = hasOvr ? `${matiPct}%/${pinaPct}%` : 'Global';
-    const badgeStyle = item.currency === 'USD'
-      ? 'background:#dcfce7;color:#166534;border-radius:3px;padding:1px 5px;font-size:11px;font-weight:700'
-      : 'background:#dbeafe;color:#1e40af;border-radius:3px;padding:1px 5px;font-size:11px;font-weight:700';
-    rowsHtml += `<tr>
-      <td>${escHtml(item.name)}</td>
-      <td><span style="${badgeStyle}">${item.currency}</span></td>
-      <td style="font-weight:600;font-variant-numeric:tabular-nums">${fmtAmount(amt, item.currency)}</td>
-      <td style="font-size:12px;color:#6b7280">${splitTxt}</td>
-      <td style="font-variant-numeric:tabular-nums">${fmtAmount(mati, item.currency)}</td>
-      <td style="font-variant-numeric:tabular-nums;color:#0d9488;font-weight:600">${fmtAmount(pina, item.currency)}</td>
-    </tr>`;
+    const splitTxt = item.splitOverride ? `${matiPct}%/${pinaPct}%` : 'Global';
+    const cuota = item.installments ? ` <small style="background:#fef3c7;color:#92400e;border-radius:3px;padding:1px 4px;font-size:10px">c.${item.installments.current}/${item.installments.total}</small>` : '';
+    const notesHtml = item.notes ? `<div style="font-size:11px;color:#6b7280;font-style:italic;margin-top:1px">${escHtml(item.notes)}</div>` : '';
+    const badge = item.currency === 'USD' ? 'background:#dcfce7;color:#166534;border-radius:3px;padding:1px 5px;font-size:11px;font-weight:700' : 'background:#dbeafe;color:#1e40af;border-radius:3px;padding:1px 5px;font-size:11px;font-weight:700';
+    rowsHtml += `<tr><td>${escHtml(item.name)}${cuota}${notesHtml}</td><td><span style="${badge}">${item.currency}</span></td><td style="font-weight:600;font-variant-numeric:tabular-nums">${fmtAmount(amt, item.currency)}</td><td style="font-size:12px;color:#6b7280">${splitTxt}</td><td style="font-variant-numeric:tabular-nums">${fmtAmount(mati, item.currency)}</td><td style="font-variant-numeric:tabular-nums;color:#0d9488;font-weight:600">${fmtAmount(pina, item.currency)}</td></tr>`;
   }
-
-  const pinaAmounts = [];
-  if (t.pinaARS > 0.001) pinaAmounts.push(fmtARS(t.pinaARS));
-  if (t.pinaUSD > 0.001) pinaAmounts.push(fmtUSD(t.pinaUSD));
-  const pinaTotal = pinaAmounts.join(' + ') || '$0,00';
-
-  snap.innerHTML = `
-    <div class="snap-header">
-      <div class="snap-title">🏠 Casa Pipi's</div>
-      <div class="snap-sub">${keyToLabel(month.key)} &nbsp;·&nbsp; Split global: Mati ${month.matiSplit}% / Pina ${month.pinaSplit}%</div>
-    </div>
-    <table class="snap-table">
-      <thead><tr>
-        <th>Concepto</th><th>Moneda</th><th>Monto</th><th>Split</th><th>Mati</th><th>Pina</th>
-      </tr></thead>
-      <tbody>${rowsHtml || '<tr><td colspan="6" style="text-align:center;color:#6b7280;padding:12px">Sin gastos cargados</td></tr>'}</tbody>
-    </table>
-    <div class="snap-totals">
-      <div class="snap-block">
-        <div class="snap-block-title">Pesos (ARS)</div>
-        <div class="snap-row"><span class="lbl">Total</span><span class="val">${fmtARS(t.totalARS)}</span></div>
-        <div class="snap-row"><span class="lbl">Mati</span><span class="val">${fmtARS(t.matiARS)}</span></div>
-        <div class="snap-row"><span class="lbl">Pina</span><span class="val hi">${fmtARS(t.pinaARS)}</span></div>
-      </div>
-      <div class="snap-block">
-        <div class="snap-block-title">Dólares (USD)</div>
-        <div class="snap-row"><span class="lbl">Total</span><span class="val">${fmtUSD(t.totalUSD)}</span></div>
-        <div class="snap-row"><span class="lbl">Mati</span><span class="val">${fmtUSD(t.matiUSD)}</span></div>
-        <div class="snap-row"><span class="lbl">Pina</span><span class="val hi">${fmtUSD(t.pinaUSD)}</span></div>
-      </div>
-    </div>
-    <div class="snap-pina">
-      <div class="snap-pina-lbl">Gastos Pina — ${keyToLabel(month.key)}</div>
-      <div class="snap-pina-val">${pinaTotal}</div>
-    </div>`;
+  const pinaParts = [];
+  if (t.pinaARS > 0.001) pinaParts.push(fmtARS(t.pinaARS));
+  if (t.pinaUSD > 0.001) pinaParts.push(fmtUSD(t.pinaUSD));
+  snap.innerHTML = `<div class="snap-header"><div class="snap-title">🏠 Casa Pipi's</div><div class="snap-sub">${keyToLabel(month.key)} &nbsp;·&nbsp; Split global: Mati ${month.matiSplit}% / Pina ${month.pinaSplit}%</div></div><table class="snap-table"><thead><tr><th>Concepto</th><th>Moneda</th><th>Monto</th><th>Split</th><th>Mati</th><th>Pina</th></tr></thead><tbody>${rowsHtml || '<tr><td colspan="6" style="text-align:center;color:#6b7280;padding:12px">Sin gastos cargados</td></tr>'}</tbody></table><div class="snap-totals"><div class="snap-block"><div class="snap-block-title">Pesos (ARS)</div><div class="snap-row"><span class="lbl">Total</span><span class="val">${fmtARS(t.totalARS)}</span></div><div class="snap-row"><span class="lbl">Mati</span><span class="val">${fmtARS(t.matiARS)}</span></div><div class="snap-row"><span class="lbl">Pina</span><span class="val hi">${fmtARS(t.pinaARS)}</span></div></div><div class="snap-block"><div class="snap-block-title">Dólares (USD)</div><div class="snap-row"><span class="lbl">Total</span><span class="val">${fmtUSD(t.totalUSD)}</span></div><div class="snap-row"><span class="lbl">Mati</span><span class="val">${fmtUSD(t.matiUSD)}</span></div><div class="snap-row"><span class="lbl">Pina</span><span class="val hi">${fmtUSD(t.pinaUSD)}</span></div></div></div><div class="snap-pina"><div class="snap-pina-lbl">Gastos Pina — ${keyToLabel(month.key)}</div><div class="snap-pina-val">${pinaParts.join(' + ') || '$0'}</div></div>`;
 }
 
 function saveImage() {
-  if (!window.html2canvas) {
-    showNotif('⚠ html2canvas no disponible (requiere conexión)');
-    return;
-  }
-  buildImageSnapshot();
-  showNotif('Generando imagen...');
-  const snap = document.getElementById('imageSnapshot');
-  html2canvas(snap, { backgroundColor: '#f8f6f2', scale: 2, useCORS: true }).then(canvas => {
-    const link = document.createElement('a');
-    link.download = `casapipis-${currentKey}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    showNotif('✓ Imagen descargada');
-  }).catch(() => showNotif('⚠ Error al generar imagen'));
+  if (!window.html2canvas) { showNotif('⚠ html2canvas no disponible (requiere conexión)'); return; }
+  buildImageSnapshot(); showNotif('Generando imagen...');
+  html2canvas(document.getElementById('imageSnapshot'), { backgroundColor: '#f8f6f2', scale: 2, useCORS: true })
+    .then(canvas => { const link = document.createElement('a'); link.download = `casapipis-${currentKey}.png`; link.href = canvas.toDataURL('image/png'); link.click(); showNotif('✓ Imagen descargada'); })
+    .catch(() => showNotif('⚠ Error al generar imagen'));
 }
 
-// ─── HISTORIAL EXPORT / IMPORT ───────────────────────────────────────────────
-function exportHistory() {
-  const keys = getSortedKeys();
-  if (!keys.length) { showNotif('⚠ No hay datos para exportar'); return; }
+async function shareWhatsApp() {
+  if (!window.html2canvas) { window.open('https://wa.me/?text=' + encodeURIComponent(buildTextSummary()), '_blank'); return; }
+  buildImageSnapshot(); showNotif('Preparando imagen...');
+  try {
+    const canvas = await html2canvas(document.getElementById('imageSnapshot'), { backgroundColor: '#f8f6f2', scale: 2, useCORS: true });
+    const blob = await new Promise(resolve => canvas.toBlob(resolve, 'image/png'));
+    const file = new File([blob], `casapipis-${currentKey}.png`, { type: 'image/png' });
+    if (navigator.canShare?.({ files: [file] })) {
+      await navigator.share({ files: [file], title: `Casa Pipi's — ${keyToLabel(currentKey)}` });
+    } else {
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement('a'); a.href = url; a.download = `casapipis-${currentKey}.png`; a.click(); URL.revokeObjectURL(url);
+      setTimeout(() => window.open('https://wa.me/?text=' + encodeURIComponent(buildTextSummary()), '_blank'), 800);
+      showNotif('Imagen descargada — abrila en WhatsApp para compartir');
+    }
+  } catch(e) { if (e.name !== 'AbortError') showNotif('⚠ Error al compartir'); }
+}
 
+function exportHistory() {
+  const keys = getSortedKeys(); if (!keys.length) { showNotif('⚠ No hay datos para exportar'); return; }
   const payload = { version: 1, exportedAt: new Date().toISOString(), months: allMonths };
-  const json = JSON.stringify(payload, null, 2);
-  const blob = new Blob([json], { type: 'application/json' });
+  const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
   const url = URL.createObjectURL(blob);
   const link = document.createElement('a');
-  const date = new Date().toISOString().slice(0, 10);
-  link.download = `casapipis-historial-${date}.json`;
-  link.href = url;
-  link.click();
-  URL.revokeObjectURL(url);
-  showNotif(`✓ Historial exportado (${keys.length} ${keys.length === 1 ? 'mes' : 'meses'})`);
+  link.download = `casapipis-historial-${new Date().toISOString().slice(0,10)}.json`;
+  link.href = url; link.click(); URL.revokeObjectURL(url);
+  showNotif(`✓ Historial exportado (${keys.length} ${keys.length===1?'mes':'meses'})`);
+}
+
+function exportToCSV() {
+  const keys = getSortedKeys(); if (!keys.length) { showNotif('⚠ No hay datos para exportar'); return; }
+  const rows = [['Mes','Concepto','Moneda','Monto','Split Mati%','Split Pina%','Mati','Pina','Notas','Cuota']];
+  for (const key of keys) {
+    const month = allMonths[key];
+    for (const item of month.items) {
+      const amt = parseFloat(item.amount) || 0;
+      const { mati, pina, matiPct, pinaPct } = calcShares(item, month);
+      const cuota = item.installments ? `${item.installments.current}/${item.installments.total}` : '';
+      rows.push([keyToLabel(key), item.name, item.currency, amt, matiPct, pinaPct, Math.round(mati), Math.round(pina), item.notes || '', cuota]);
+    }
+  }
+  const csv = rows.map(r => r.map(cell => `"${String(cell).replace(/"/g,'""')}"`).join(',')).join('\r\n');
+  const blob = new Blob(['﻿' + csv], { type: 'text/csv;charset=utf-8' });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.download = `casapipis-${new Date().toISOString().slice(0,10)}.csv`;
+  link.href = url; link.click(); URL.revokeObjectURL(url);
+  showNotif(`✓ CSV exportado (${keys.length} meses)`);
 }
 
 function importHistory(event) {
-  const file = event.target.files[0];
-  if (!file) return;
-  event.target.value = '';
-
+  const file = event.target.files[0]; if (!file) return; event.target.value = '';
   const reader = new FileReader();
   reader.onload = function(e) {
-    let payload;
-    try {
-      payload = JSON.parse(e.target.result);
-    } catch {
-      showNotif('⚠ El archivo no es válido'); return;
-    }
-
-    const imported = payload.months || payload;
-    _applyImportedMonths(imported, false);
+    let payload; try { payload = JSON.parse(e.target.result); } catch { showNotif('⚠ El archivo no es válido'); return; }
+    _applyImportedMonths(payload.months || payload, false);
   };
   reader.readAsText(file);
 }
 
-// ─── GITHUB SYNC ─────────────────────────────────────────────────────────────
-
 function loadGhToken() { return localStorage.getItem(GH_TOKEN_KEY) || ''; }
-
-function saveGhToken() {
-  const val = document.getElementById('ghTokenInput').value.trim();
-  if (!val) { showNotif('⚠ Ingresá un token antes de guardar'); return; }
-  localStorage.setItem(GH_TOKEN_KEY, val);
-  renderSyncStatus();
-  showNotif('✓ Token guardado');
-}
-
-function toggleTokenVisibility() {
-  const el = document.getElementById('ghTokenInput');
-  el.type = el.type === 'password' ? 'text' : 'password';
-}
+function saveGhToken() { const val = document.getElementById('ghTokenInput').value.trim(); if (!val) { showNotif('⚠ Ingresá un token antes de guardar'); return; } localStorage.setItem(GH_TOKEN_KEY, val); renderSyncStatus(); showNotif('✓ Token guardado'); }
+function toggleTokenVisibility() { const el = document.getElementById('ghTokenInput'); el.type = el.type === 'password' ? 'text' : 'password'; }
 
 function renderSyncStatus(msg, cls) {
-  const el = document.getElementById('syncStatus');
-  if (!el) return;
+  const el = document.getElementById('syncStatus'); if (!el) return;
+  if (msg) { el.textContent = msg; el.className = 'sync-status ' + (cls||''); return; }
   const token = loadGhToken();
-  if (msg) {
-    el.textContent = msg;
-    el.className = 'sync-status ' + (cls || '');
-    return;
-  }
-  if (!token) {
-    el.textContent = '● Sin token configurado';
-    el.className = 'sync-status';
-  } else {
+  if (!token) { el.textContent = '● Sin token configurado'; el.className = 'sync-status'; }
+  else {
     const last = localStorage.getItem(GH_LAST_SYNC_KEY);
-    if (last) {
-      const d = new Date(last);
-      const fmt = d.toLocaleDateString('es-AR') + ' ' + d.toLocaleTimeString('es-AR', { hour: '2-digit', minute: '2-digit' });
-      el.textContent = `● Último guardado en GitHub: ${fmt}`;
-      el.className = 'sync-status ok';
-    } else {
-      el.textContent = '● Token configurado — sin guardar aún';
-      el.className = 'sync-status ok';
-    }
+    if (last) { const d = new Date(last); const fmt = d.toLocaleDateString('es-AR') + ' ' + d.toLocaleTimeString('es-AR', { hour:'2-digit', minute:'2-digit' }); el.textContent = `● Último guardado en GitHub: ${fmt}`; el.className = 'sync-status ok'; }
+    else { el.textContent = '● Token configurado — sin guardar aún'; el.className = 'sync-status ok'; }
   }
-  // Pre-fill token input (masked)
-  const input = document.getElementById('ghTokenInput');
-  if (input && token) input.value = token;
+  const input = document.getElementById('ghTokenInput'); if (input && token) input.value = token;
 }
 
-// Encode/decode JSON with proper unicode support for GitHub API (base64)
 function toBase64(str)   { return btoa(unescape(encodeURIComponent(str))); }
 function fromBase64(str) { return decodeURIComponent(escape(atob(str))); }
 
 async function ghGetFile(token) {
-  const res = await fetch(GH_API_URL, {
-    headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' }
-  });
+  const res = await fetch(GH_API_URL, { headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json' } });
   if (res.status === 404) return null;
   if (!res.ok) throw new Error(`GitHub API error ${res.status}`);
-  return await res.json(); // { content, sha, ... }
+  return await res.json();
 }
 
 async function pushToGithub() {
-  const token = loadGhToken();
-  if (!token) { showNotif('⚠ Configurá el token primero'); return; }
-
+  const token = loadGhToken(); if (!token) { showNotif('⚠ Configurá el token primero'); return; }
   renderSyncStatus('⟳ Guardando en GitHub...', 'busy');
   try {
     const existing = await ghGetFile(token);
     const payload  = { version: 2, savedAt: new Date().toISOString(), months: allMonths };
-    const content  = toBase64(JSON.stringify(payload, null, 2));
-    const body     = {
-      message: `Casa Pipi's: actualizar historial ${new Date().toLocaleDateString('es-AR')}`,
-      content,
-      ...(existing ? { sha: existing.sha } : {})
-    };
-    const res = await fetch(GH_API_URL, {
-      method: 'PUT',
-      headers: {
-        'Authorization': `Bearer ${token}`,
-        'Accept': 'application/vnd.github+json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify(body)
-    });
-    if (!res.ok) {
-      const err = await res.json().catch(() => ({}));
-      throw new Error(err.message || `Error ${res.status}`);
-    }
-    localStorage.setItem(GH_LAST_SYNC_KEY, new Date().toISOString());
-    renderSyncStatus();
-    showNotif('✓ Historial guardado en GitHub');
-  } catch(e) {
-    renderSyncStatus(`✗ Error: ${e.message}`, 'error');
-    showNotif('⚠ No se pudo guardar en GitHub');
-  }
+    const body     = { message: `Casa Pipi's: actualizar historial ${new Date().toLocaleDateString('es-AR')}`, content: toBase64(JSON.stringify(payload, null, 2)), ...(existing ? { sha: existing.sha } : {}) };
+    const res = await fetch(GH_API_URL, { method: 'PUT', headers: { 'Authorization': `Bearer ${token}`, 'Accept': 'application/vnd.github+json', 'Content-Type': 'application/json' }, body: JSON.stringify(body) });
+    if (!res.ok) { const err = await res.json().catch(()=>({})); throw new Error(err.message || `Error ${res.status}`); }
+    localStorage.setItem(GH_LAST_SYNC_KEY, new Date().toISOString()); renderSyncStatus(); showNotif('✓ Historial guardado en GitHub');
+  } catch(e) { renderSyncStatus(`✗ Error: ${e.message}`, 'error'); showNotif('⚠ No se pudo guardar en GitHub'); }
 }
 
 async function pullFromGithub() {
-  const token = loadGhToken();
-  if (!token) { showNotif('⚠ Configurá el token primero'); return; }
-
+  const token = loadGhToken(); if (!token) { showNotif('⚠ Configurá el token primero'); return; }
   renderSyncStatus('⟳ Trayendo desde GitHub...', 'busy');
   try {
     const file = await ghGetFile(token);
-    if (!file) {
-      renderSyncStatus();
-      showNotif('ℹ No hay historial guardado en GitHub todavía');
-      return;
-    }
-    const payload  = JSON.parse(fromBase64(file.content.replace(/\n/g, '')));
-    const imported = payload.months || payload;
-    _applyImportedMonths(imported, true);
-    renderSyncStatus();
-  } catch(e) {
-    renderSyncStatus(`✗ Error: ${e.message}`, 'error');
-    showNotif('⚠ No se pudo traer desde GitHub');
-  }
+    if (!file) { renderSyncStatus(); showNotif('ℹ No hay historial guardado en GitHub todavía'); return; }
+    const payload = JSON.parse(fromBase64(file.content.replace(/\n/g,'')));
+    _applyImportedMonths(payload.months || payload, true); renderSyncStatus();
+  } catch(e) { renderSyncStatus(`✗ Error: ${e.message}`, 'error'); showNotif('⚠ No se pudo traer desde GitHub'); }
 }
 
 async function autoLoadFromGithub() {
-  const token = loadGhToken();
-  if (!token) return;
+  const token = loadGhToken(); if (!token) return;
   renderSyncStatus('⟳ Cargando historial de GitHub...', 'busy');
   try {
     const file = await ghGetFile(token);
     if (!file) { renderSyncStatus(); return; }
-    const payload  = JSON.parse(fromBase64(file.content.replace(/\n/g, '')));
+    const payload  = JSON.parse(fromBase64(file.content.replace(/\n/g,'')));
     const imported = payload.months || payload;
-    // Silent merge: add months not present locally, keep local for conflicts
     let added = 0;
-    for (const k of Object.keys(imported)) {
-      if (!allMonths[k]) { allMonths[k] = imported[k]; added++; }
-    }
-    if (added) {
-      saveAll();
-      const keys = getSortedKeys();
-      currentKey = keys[keys.length - 1];
-      renderAll();
-    }
+    for (const k of Object.keys(imported)) { if (!allMonths[k]) { allMonths[k] = imported[k]; added++; } }
+    if (added) { saveAll(); const keys = getSortedKeys(); currentKey = keys[keys.length-1]; renderAll(); }
     renderSyncStatus();
-    if (added) showNotif(`✓ ${added} ${added === 1 ? 'mes cargado' : 'meses cargados'} desde GitHub`);
-  } catch(e) {
-    renderSyncStatus(`✗ Error al conectar con GitHub`, 'error');
-  }
+    if (added) showNotif(`✓ ${added} ${added===1?'mes cargado':'meses cargados'} desde GitHub`);
+  } catch(e) { renderSyncStatus('✗ Error al conectar con GitHub', 'error'); }
 }
 
-// Shared merge logic used by both pull and importHistory
-function _applyImportedMonths(imported, githubWinsOnConflict) {
-  const importedKeys  = Object.keys(imported);
-  const newKeys       = importedKeys.filter(k => !allMonths[k]);
-  const conflictKeys  = importedKeys.filter(k =>  allMonths[k]);
-
+function _applyImportedMonths(imported, githubWins) {
+  const importedKeys = Object.keys(imported);
+  const newKeys      = importedKeys.filter(k => !allMonths[k]);
+  const conflictKeys = importedKeys.filter(k =>  allMonths[k]);
   if (!importedKeys.length) { showNotif('ℹ El archivo no tiene datos'); return; }
-
-  if (conflictKeys.length && !githubWinsOnConflict) {
-    let msg = `Se encontraron ${importedKeys.length} ${importedKeys.length === 1 ? 'mes' : 'meses'}.\n`;
+  if (conflictKeys.length && !githubWins) {
+    let msg = `Se encontraron ${importedKeys.length} ${importedKeys.length===1?'mes':'meses'}.\n`;
     if (newKeys.length)      msg += `• ${newKeys.length} nuevos (se agregarán)\n`;
-    if (conflictKeys.length) msg += `• ${conflictKeys.length} ya existentes:\n\n  OK = Reemplazar con los del archivo\n  Cancelar = Conservar los locales`;
+    if (conflictKeys.length) msg += `• ${conflictKeys.length} ya existentes:\n\n  OK = Reemplazar\n  Cancelar = Conservar locales`;
     const replace = confirm(msg);
     for (const k of newKeys) allMonths[k] = imported[k];
     if (replace) for (const k of conflictKeys) allMonths[k] = imported[k];
   } else {
     for (const k of newKeys)      allMonths[k] = imported[k];
-    for (const k of conflictKeys) allMonths[k] = imported[k]; // GitHub wins silently on pull
+    for (const k of conflictKeys) allMonths[k] = imported[k];
   }
-
-  saveAll();
-  const keys = getSortedKeys();
-  currentKey = keys[keys.length - 1];
-  editingItemId = null;
-  renderAll();
-  showNotif(`✓ ${importedKeys.length} ${importedKeys.length === 1 ? 'mes importado' : 'meses importados'}`);
+  saveAll(); const keys = getSortedKeys(); currentKey = keys[keys.length-1]; editingItemId = null; renderAll();
+  showNotif(`✓ ${importedKeys.length} ${importedKeys.length===1?'mes importado':'meses importados'}`);
 }
 
-// ─── ESCAPE HELPERS ───────────────────────────────────────────────────────────
-function escHtml(str) {
-  return String(str)
-    .replace(/&/g,'&amp;').replace(/</g,'&lt;')
-    .replace(/>/g,'&gt;').replace(/"/g,'&quot;');
-}
+function escHtml(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+function escAttr(str) { return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;'); }
+function escText(str) { return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;'); }
 
-function escAttr(str) {
-  return String(str).replace(/"/g,'&quot;').replace(/'/g,'&#39;');
-}
-
-// ─── INIT ─────────────────────────────────────────────────────────────────────
 (async function init() {
   loadAll();
   currentKey = ensureCurrentMonth();
+  initDarkMode();
   renderAll();
   renderSyncStatus();
   await autoLoadFromGithub();
