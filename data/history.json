@@ -1,6 +1,6 @@
 {
   "version": 2,
-  "savedAt": "2026-05-04T14:23:29.153Z",
+  "savedAt": "2026-05-05T12:51:20.717Z",
   "months": {
     "2026-05": {
       "key": "2026-05",
@@ -19,9 +19,11 @@
           "id": "45fx7xtzmonvwwjb",
           "name": "Expensas",
           "currency": "ARS",
-          "amount": 0,
+          "amount": 70731,
           "splitOverride": null,
-          "isRecurring": true
+          "isRecurring": true,
+          "notes": "",
+          "installments": null
         },
         {
           "id": "9f1vr1p1monvwwjb",
@@ -74,7 +76,7 @@
             "pina": 100
           },
           "isRecurring": false,
-          "notes": "primevideo x2, thelonious 1/2, bebop 50%",
+          "notes": "",
           "installments": null
         },
         {
